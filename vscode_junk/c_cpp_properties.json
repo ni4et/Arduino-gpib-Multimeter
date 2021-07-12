@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "c:\\Tools\\Arduino\\hardware\\arduino\\avr\\libraries\\SPI\\src",
+                "c:\\Tools\\Arduino\\libraries\\SD\\src",
+                "C:\\Users\\david\\Documents\\Arduino\\libraries\\Adafruit_MAX31865_library",
+                "C:\\Users\\david\\Documents\\Arduino\\libraries\\Arduino-DMMShield-Library-master",
+                "c:\\Tools\\Arduino\\libraries\\LiquidCrystal\\src",
+                "c:\\Tools\\Arduino\\tools\\**",
+                "c:\\Tools\\Arduino\\hardware\\arduino\\avr\\**",
+                "${workspaceFolder}/**",
+                "C:\\Work\\Arduino\\libraries\\**",
+                "c:\\Tools\\Arduino\\hardware\\tools\\**",
+                "c:\\Tools\\Arduino\\libraries\\**",
+                "C:\\Users\\david\\Documents\\Arduino\\libraries\\**"
+            ],
+            "defines": [
+                "UNICODE",
+                "_UNICODE",
+                "USBCON"
+            ],
+            "forcedInclude": [
+                "c:\\Tools\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+            ],
+            "compilerPath": "C:\\Program Files\\LLVM\\bin\\clang.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
