@@ -35,10 +35,8 @@
                 "C:\\Tools\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
                 "C:\\Tools\\Arduino\\hardware\\arduino\\avr\\variants\\mega",
                 "C:\\Tools\\Arduino\\hardware\\arduino\\avr\\libraries\\Wire\\src",
-                "C:\\Users\\David\\Documents\\Arduino\\libraries\\Adafruit_LED_Backpack_Library",
-                "C:\\Users\\David\\Documents\\Arduino\\libraries\\Adafruit_GFX_Library",
+                "C:\\Users\\David\\Documents\\Arduino\\libraries\\Adafruit_LED_Backpack-master",
                 "C:\\Users\\David\\Documents\\Arduino\\libraries\\Arduino-DMMShield-Library-master",
-                "C:\\Users\\David\\Documents\\Arduino\\libraries\\Adafruit_BusIO",
                 "c:\\tools\\arduino\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include",
                 "c:\\tools\\arduino\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include-fixed",
                 "c:\\tools\\arduino\\hardware\\tools\\avr\\avr\\include"

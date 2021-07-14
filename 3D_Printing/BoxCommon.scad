@@ -11,8 +11,14 @@ function e(clear,o) =// Add clear to demensions of o
      (is_list(clear)) ?
         [o.x+clear.x,o.y+clear.y,o.z+clear.z] :
         [o.x+clear,o.y+clear,o.z+clear];
+
+
+module cubeXY(cc)
+{
+    translate([-cc.x/2,-cc.y/2, 0]) cube(cc,center=false);
+}
  
-DISPBLOCK=[16+50.2*3,44,12]; // Z is arbitrary at the moment
+DISPBLOCK=[16+50.2*3,44,4]; // Z is arbitrary at the moment
 
 // FF=Fudge Factor
 
