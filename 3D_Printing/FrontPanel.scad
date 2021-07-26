@@ -27,12 +27,13 @@ dispBottom=dispCenter+[0,-dispHolder.y/2,0];
     cube([100,1,100],center=true);  // Show the location
 
 dispCut=[51*3,23,panelDim.z];
+lipHt=10;
 
 difference()
 {
     union()
     {
-        dressPanel(panelDim,10, outsideR,outsideR-3.2,outsideR-5.5);
+        dressPanel(panelDim,lipHt, outsideR,outsideR-3.2,outsideR-5.5);
         // The holder for the display
         translate(dispCenter+[0,0,dispHolder.z/2] ) cube(dispHolder,center=true);
         // The holder for the DMM
@@ -47,8 +48,8 @@ difference()
     translate(DMM_Center)  DMM_Front_D();
     
     // Insert holes
-    #translate([panelDim.x/2,0,panelDim.z+8/2]) rotate([0,90,0]) cylinder(h=15,d=5.5,center=true);
-    #translate([-panelDim.x/2,0,panelDim.z+8/2]) rotate([0,90,0]) cylinder(h=15,d=5.5,center=true);
+    #translate([panelDim.x/2,0,panelDim.z+lipHt/2]) rotate([0,90,0]) cylinder(h=15,d=5.5,center=true);
+    #translate([-panelDim.x/2,0,panelDim.z+lipHt/2]) rotate([0,90,0]) cylinder(h=15,d=5.5,center=true);
     
     // Draw the knob hole
     translate([-panelDim.x/4,4+-panelDim.y/4,0])
