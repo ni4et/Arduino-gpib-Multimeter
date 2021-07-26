@@ -11,15 +11,15 @@ $fs=.1;
 
 outsideR=10;
 // The dimensions of the front most rounded corner cube
-panelDim=[DISPBLOCK.x,DISPBLOCK.y,0]+[30,90,3.2];
+panelDim=[DISPBLOCK.x,DISPBLOCK.y,0]+[30,85,3.2];
 innerPanelDim=[panelDim.x-2*outsideR,panelDim.y-2*outsideR,panelDim.z];
 
 dmmSupportSize=[70,20,6+9];
 
-DMM_Center=align("SE",innerPanelDim)+[-dmmSupportSize.x/2,dmmSupportSize.y*2+8,0];
+DMM_Center=align("SE",innerPanelDim)+[-dmmSupportSize.x/2,dmmSupportSize.y*2+6,0];
 // The holder is slightly bigger
 dispHolder=DISPBLOCK+[20,20,2];
-dispCenter=[0,-20-DISPBLOCK.y/2+panelDim.y/2,panelDim.z];
+dispCenter=[0,-15-DISPBLOCK.y/2+panelDim.y/2,panelDim.z];
 
 // The bottom of the display
 dispBottom=dispCenter+[0,-dispHolder.y/2,0];
@@ -34,7 +34,7 @@ difference()
     {
         dressPanel(panelDim,10, outsideR,outsideR-3.2,outsideR-5.5);
         // The holder for the display
-        translate(dispCenter+[0,5,dispHolder.z/2] ) cube(dispHolder,center=true);
+        translate(dispCenter+[0,0,dispHolder.z/2] ) cube(dispHolder,center=true);
         // The holder for the DMM
         translate(DMM_Center) DMM_Front_U();
         
