@@ -17,6 +17,13 @@ innerPanelDim=[panelDim.x-2*outsideR,panelDim.y-2*outsideR,panelDim.z];
 dmmSupportSize=[70,20,6+9];
 
 DMM_Center=align("SE",innerPanelDim)+[-dmmSupportSize.x/2,dmmSupportSize.y*2+6,0];
+
+SPK_DIA=12;
+SPK_HT=9;
+SPK_Port_DIA=2;
+SPK_HOLDER_DIA=SPK_DIA+4;
+
+SPK_Center=align("S",panelDim,center=true)+ [0,SPK_HOLDER_DIA-2,0];
 // The holder is slightly bigger
 dispHolder=DISPBLOCK+[20,20,2];
 dispCenter=[0,-15-DISPBLOCK.y/2+panelDim.y/2,panelDim.z];
@@ -38,6 +45,8 @@ difference()
         translate(dispCenter+[0,0,dispHolder.z/2] ) cube(dispHolder,center=true);
         // The holder for the DMM
         translate(DMM_Center) DMM_Front_U();
+        // Block for the speaker
+        translate(SPK_Center+[0,0,3]) cylinder(d=SPK_HOLDER_DIA,h=SPK_HT);
         
     }
     // Turn the following statement on to see a cross section
@@ -54,4 +63,10 @@ difference()
     // Draw the knob hole
     translate([-panelDim.x/4,4+-panelDim.y/4,0])
         cylinder(h=25,d=7.5,center=true);
+    // Finish the speaker
+    translate(SPK_Center+[0,0,3])
+    {
+        cylinder(d=SPK_DIA,h=SPK_HT+1);
+        cylinder(d=SPK_Port_DIA,h=25,center=true);
+    }
 }
