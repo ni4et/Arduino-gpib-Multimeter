@@ -29,12 +29,12 @@ DISPBLOCK=[16+50.2*3,44,4]; // Z is arbitrary at the moment
 // FF=Fudge Factor
 
 DMM_BOARD_X=66 ; // 63 NO FF FROM DRAWING
-DMM_BOARD_Y=2 ; // 1.6 NO FF Measured
+DMM_BOARD_Y=3 ; // 1.6 NO FF Measured
 //DMM_Center=[50,-20,0];
 
 // Extra board locations relative to the DMM board:
-CPU_Board_Loc=[0,26,6];
-IF_Board_Loc=[0,14,6];
+CPU_Board_Loc=[0,27,6];
+IF_Board_Loc=[0,15,6];
 boards=[[0,0,0],IF_Board_Loc,CPU_Board_Loc];
 
 

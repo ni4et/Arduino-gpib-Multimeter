@@ -12,10 +12,10 @@ module DMM_Front_U()
 {  
     sz=[10,20,6+9];
     
-   translate([25,-sz.y/2,sz.z/2]) cube(sz,center=true);
+   translate([5,-sz.y/2,sz.z/2]) cube(sz,center=true);
    translate([-25,-sz.y/2,sz.z/2]) cube(sz,center=true);
    
-   translate([0,-8,9/2] + Front_Shift) cube([70,20,9],center=true);
+   translate([0,-7,9/2] + Front_Shift) cube([70,23,9],center=true);
 }
 module DMM_Front_D()
 {
@@ -24,7 +24,7 @@ module DMM_Front_D()
        for (bl=boards) 
         {
                    // The board is centered on 0,0 and 7 above z
-        translate(bl+[-DMM_BOARD_X/2,-DMM_BOARD_Y/2,7])
+        #translate(bl+[-DMM_BOARD_X/2,-DMM_BOARD_Y/2,7])
 
             cube([DMM_BOARD_X, DMM_BOARD_Y,8]);
  

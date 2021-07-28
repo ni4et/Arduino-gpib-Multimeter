@@ -43,6 +43,32 @@ module dressPanel(panel,lipHt, RO,RL,RI)
     }
 }
 
+module outerShell(panel, RO,RL)
+{
+    ht2=panel.z/2;
+    innerPanel=[panel.x-RO*2, panel.y-RO*2,ht2];
+    
+    // Virtually center the panel on the origin
+    translate([-innerPanel.x/2,-innerPanel.y/2,0])
+    {
+
+        difference()
+        {
+            minkowski()
+            {
+                cube(innerPanel,center=false);
+                cylinder(r=RO,h=ht2);
+            }
+            translate([0,0,-.5])
+            minkowski()
+            {
+                cube(innerPanel,center=false);
+                cylinder(r=RL,h=ht2+1);
+            }
+        }
+    }
+}
+
 module testDressPanel()
 {   
     R=15;
@@ -53,4 +79,17 @@ module testDressPanel()
         cube([100,100,20]);
     }
 }
-testDressPanel();
+
+module testOuterShell()
+{
+
+R=15;
+    
+    difference()
+    {
+        outerShell([60,40,20],R,R-2);
+        cube([100,100,20]);
+    }
+}
+//testDressPanel();
+testOuterShell();
