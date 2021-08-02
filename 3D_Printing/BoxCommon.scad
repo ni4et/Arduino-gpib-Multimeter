@@ -24,7 +24,7 @@ module cubeXY(cc)
     translate([-cc.x/2,-cc.y/2, 0]) cube(cc,center=false);
 }
  
-DISPBLOCK=[16+50.2*3,44,4]; // Z is arbitrary at the moment
+DISPBLOCK=[16+50.2*3,44,15]; // Z is arbitrary at the moment
 
 // FF=Fudge Factor
 
@@ -33,7 +33,8 @@ DMM_BOARD_Y=3 ; // 1.6 NO FF Measured
 //DMM_Center=[50,-20,0];
 
 // Extra board locations relative to the DMM board:
-CPU_Board_Loc=[0,27,6];
+CPU_Board_Loc=[-10,27,6];  // Not using full width of the board
+// loc is offset left to miss drilling the screw block.
 IF_Board_Loc=[0,15,6];
 boards=[[0,0,0],IF_Board_Loc,CPU_Board_Loc];
 

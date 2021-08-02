@@ -18,7 +18,7 @@ dmmSupportSize=[70,20,6+9];
 
 DMM_Center=align("SE",innerPanelDim)+[-dmmSupportSize.x/2,dmmSupportSize.y*2+6,0];
 
-SPK_DIA=12;
+SPK_DIA=12.4;
 SPK_HT=9;
 SPK_Port_DIA=2.5;
 SPK_HOLDER_DIA=SPK_DIA+4;
@@ -27,7 +27,7 @@ switchSz=[14,13,2];
 
 SPK_Center=align("W",panelDim,center=true)+ [SPK_HOLDER_DIA/2+25,3-SPK_HOLDER_DIA/2,0];
 // The holder is slightly bigger
-dispHolder=DISPBLOCK+[5,5,2];
+dispHolder=DISPBLOCK+[5,5,3];
 dispCenter=[0,-8-DISPBLOCK.y/2+panelDim.y/2,panelDim.z];
 
 // The bottom of the display
@@ -50,20 +50,30 @@ difference()
         translate(DMM_Center) DMM_Front_U();
         // Block for the speaker
         translate(SPK_Center+[0,0,3]) cylinder(d=SPK_HOLDER_DIA,h=SPK_HT);
-        
+        // Blocks for the screws
+        translate([panelDim.x/2-10,0,panelDim.z+lipHt/2]) cube([10,10,lipHt],center=true);
+        translate([-panelDim.x/2+10,0,panelDim.z+lipHt/2]) cube([10,10,lipHt],center=true);
     }
     // Turn the following statement on to see a cross section
-    *translate([0,-50,-1])cube(100,100,10);
+    *translate([80,-15,-1])cube(100,100,10);
+    
+    // Cut the space for the display block and the bezel
     translate(dispCenter) cubeXY(DISPBLOCK+[1.5,1.5,15]);
     translate([dispCenter.x,dispCenter.y,-.1])
         Bezel(dispCut+[1,1,.2]);
+    // and save some plastic:
+     translate(dispCenter+[0,0,dispHolder.z/2] )
+        cube(dispHolder-[30,0,0] ,center=true);
+     translate(dispCenter+[0,0,dispHolder.z/2] )
+        cube(dispHolder-[0,30,0] ,center=true);
+    // cut the slots for the boards.
     translate(DMM_Center)  DMM_Front_D();
     
-    // Insert holes
-    #translate([panelDim.x/2,0,panelDim.z+lipHt/2]) rotate([0,90,0]) cylinder(h=25,d=5.5,center=true);
-    #translate([-panelDim.x/2,0,panelDim.z+lipHt/2]) rotate([0,90,0]) cylinder(h=25,d=5.5,center=true);
+    // Insert holes for the screws
+    #translate([panelDim.x/2,0,panelDim.z+lipHt/2]) rotate([0,-90,0]) cylinder(h=15,d=5.5,center=false);
+    #translate([-panelDim.x/2,0,panelDim.z+lipHt/2]) rotate([0,90,0]) cylinder(h=15,d=5.5,center=false);
     
-    // Draw the knob hole
+    // Draw the switch hole
     translate([-panelDim.x/4,4+-panelDim.y/4,0])
         cylinder(h=25,d=7.5,center=true);
     translate([-panelDim.x/4,4+-panelDim.y/4,panelDim.z])
