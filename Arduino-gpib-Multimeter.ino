@@ -14,6 +14,7 @@ Adafruit_7segment msbDisp = Adafruit_7segment();
 Adafruit_7segment lsbDisp = Adafruit_7segment();
 Adafruit_AlphaNum4 unitsDisp = Adafruit_AlphaNum4();
 
+#define PIN_TONE 15
 
 #include <DMMShield.h>
 #include <eprom.h>
@@ -91,8 +92,8 @@ void writeNumber(const char * nstring) // Expecting a string of at least 8 numbe
 void setup()
 {
     // put your setup code here, to run once:
-      lsbDisp.begin(0x70); // For the seven segment.
-      msbDisp.begin(0x71); // For the seven segment.
+      lsbDisp.begin(0x71); // For the seven segment.
+      msbDisp.begin(0x70); // For the seven segment.
       unitsDisp.begin(0x72); // For the seven segment.
 
       Serial.begin(9600);
@@ -103,7 +104,11 @@ void setup()
   writeUnits("Helo");
   //	dmm.ProcessIndividualCmd("DMMSetScale VoltageDC5");
   setupKnobs();
-  pinMode(5,OUTPUT);
+  // Try to tone
+  pinMode(PIN_TONE,OUTPUT);
+  digitalWrite(PIN_TONE,HIGH);
+  
+  tone(PIN_TONE,2500,1000);
 }
 
 char buf[16];
@@ -117,6 +122,7 @@ uint16_t stat;
 
   double val;
   uint8_t err;
+  
   loopKnobs();
   dmm.CheckForCommand();
   stat=digitalRead(PIN_SPI_MISO);
