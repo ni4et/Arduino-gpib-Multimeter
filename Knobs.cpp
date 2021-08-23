@@ -1,14 +1,4 @@
-#include <Arduino.h>
-
-
-#include "Knobs.h"
-// Locals that need to be static
-volatile int16_t knobCount=0; // Modified in isr
-int16_t knobCountFollow=0; // follows knobCount in loop()
-
-// Shared with main loop:
-int16_t rangeSteps=0;
-int16_t modeSteps=0;
+#include "Common.h"
 
 
 #define APIN 18
@@ -17,11 +7,20 @@ int16_t modeSteps=0;
 #define OPEN HIGH
 #define CLOSED LOW
 
+#define KNOB_Q_DEPTH 8 // Power of 2
+#define KNOB_Q_MASK (KNOB_Q_DEPTH-1)
+KNOB_EVENT knobEvents[KNOB_Q_DEPTH];
+uint8_t Q_in=0,Q_out=0;
+// Q_in==Q_Q_out queue empty.
+// post then incrememt or read then increment pointer
+
 
 //==========================================================================
 typedef enum ENCODER_STATE {E_START, AFIRST, BSECOND, BFIRST,ASECOND } encoder_state_t;
 
 encoder_state_t es=E_START;
+
+
 
 void ISR_A();
 void ISR_B();
@@ -35,7 +34,8 @@ void ISR_A()
         else if (BFIRST==es)
         {
             es=ASECOND; // BFIRST->>ASECOND
-            knobCount--;
+            knobEvents[Q_in]=(digitalRead(APIN)==OPEN)?KE_RANGE_DN:KE_MODE_DN; 
+            Q_in=(Q_in+1) & KNOB_Q_MASK;
         }
     }
     else if (digitalRead(BPIN)==OPEN) // Both open
@@ -50,7 +50,9 @@ void ISR_B()
         else if (AFIRST==es)
         {
             es=BSECOND;
-            knobCount++;
+            knobEvents[Q_in]=(digitalRead(APIN)==OPEN)?KE_RANGE_UP:KE_MODE_UP; 
+            Q_in=(Q_in+1) & KNOB_Q_MASK;
+
         }
     }
     else if (digitalRead(APIN)==OPEN)
@@ -70,19 +72,15 @@ void setupKnobs()
     attachInterrupt(digitalPinToInterrupt(BPIN),ISR_B,CHANGE);
 }
 
-void loopKnobs()
+// Returns a queued knob event;
+KNOB_EVENT loopKnobs()
 {
-    //============== Now go get the knob encoder command part
-    int16_t diff=knobCount-knobCountFollow;
-    knobCountFollow+=diff;
+    KNOB_EVENT rv;
 
-    if (digitalRead(CPIN))
+    if (Q_in!=Q_out)
     {
-        modeSteps=diff;
+       rv=knobEvents[Q_out];
+       Q_out=(Q_out+1) & KNOB_Q_MASK;
     }
-    else
-    {
-        rangeSteps=diff;
-    }
-
+    return rv;
 }

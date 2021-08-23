@@ -7,16 +7,13 @@
 
 #include <Wire.h> // Enable this line if using Arduino Uno, Mega, etc.
 //#include <Adafruit_GFX.h>
-#include "Adafruit_LEDBackpack.h"
-#include "Knobs.h"
+#include "Common.h"
 
 Adafruit_7segment msbDisp = Adafruit_7segment();
 Adafruit_7segment lsbDisp = Adafruit_7segment();
 Adafruit_AlphaNum4 unitsDisp = Adafruit_AlphaNum4();
 
-#define PIN_TONE 15
 
-#include <DMMShield.h>
 #include <eprom.h>
 #include <errors.h>
 #include <dmm.h>
@@ -103,6 +100,8 @@ void setup()
 
   writeUnits("Helo");
   //	dmm.ProcessIndividualCmd("DMMSetScale VoltageDC5");
+  dmm.SetScale(DmmDCVoltage_5e1);
+
   setupKnobs();
   // Try to tone
   pinMode(PIN_TONE,OUTPUT);
@@ -123,7 +122,25 @@ uint16_t stat;
   double val;
   uint8_t err;
   
-  loopKnobs();
+  KNOB_EVENT ke=loopKnobs();
+  switch( ke )
+  {
+    case KE_MODE_DN:
+        dmm.SetScale(modeChangeHander(-1));
+      break;
+    case KE_MODE_UP:
+         dmm.SetScale(modeChangeHander(1));
+      break;
+   case KE_RANGE_DN:
+         dmm.SetScale(rangeChangeHander(-1));
+      break;
+   case KE_RANGE_UP:
+        dmm.SetScale(rangeChangeHander(1));
+      break;
+    default:
+      break;
+  }
+  
   dmm.CheckForCommand();
   stat=digitalRead(PIN_SPI_MISO);
   if (stat==HIGH)

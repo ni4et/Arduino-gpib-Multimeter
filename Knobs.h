@@ -1,7 +1,8 @@
+// Interface to the knobs ISR routines. 
+ 
+// call loopKnobs to get knob events that may be pending.
+
+typedef enum KNOB_EVENT { KE_NONE,KE_RANGE_UP,KE_RANGE_DN,KE_MODE_UP, KE_MODE_DN};
 void setupKnobs();
-
-void loopKnobs();
-
-extern int16_t rangeSteps=0;
-extern int16_t modeSteps=0;
+KNOB_EVENT loopKnobs();
 
