@@ -123,6 +123,7 @@ uint16_t stat;
   uint8_t err;
   
   KNOB_EVENT ke=loopKnobs();
+  //Serial.print("KE: "); Serial.println(ke);
   switch( ke )
   {
     case KE_MODE_DN:
@@ -151,7 +152,7 @@ uint16_t stat;
     DMM_FormatValue(val,buf,1);
     //Serial.print(err);
     //Serial.print(" ");
-    //Serial.println(buf);
+    Serial.println(buf);
     if ((err == ERRVAL_SUCCESS) && (val != INFINITY) && (val != -INFINITY )&& !DMM_IsNotANumber(val))
     {
 
