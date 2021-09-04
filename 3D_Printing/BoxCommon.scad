@@ -23,8 +23,15 @@ module cubeXY(cc)
 {
     translate([-cc.x/2,-cc.y/2, 0]) cube(cc,center=false);
 }
- 
+
+
+// The size of the block that holds the display. Determines width.
 DISPBLOCK=[16+50.2*3,44,15]; // Z is arbitrary at the moment
+
+// The real size of the front panel
+panelDim=[DISPBLOCK.x,DISPBLOCK.y,0]+[20,70,3.2];
+lipHt=10;
+outsideR=10;
 
 // FF=Fudge Factor
 
@@ -33,7 +40,7 @@ DMM_BOARD_Y=3 ; // 1.6 NO FF Measured
 //DMM_Center=[50,-20,0];
 
 // Extra board locations relative to the DMM board:
-CPU_Board_Loc=[-10,27,6];  // Not using full width of the board
+CPU_Board_Loc=[0,27,6];  // Not using full width of the board
 // loc is offset left to miss drilling the screw block.
 IF_Board_Loc=[0,15,6];
 boards=[[0,0,0],IF_Board_Loc,CPU_Board_Loc];

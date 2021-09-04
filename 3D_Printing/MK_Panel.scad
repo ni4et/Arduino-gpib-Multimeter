@@ -91,5 +91,5 @@ R=15;
         cube([100,100,20]);
     }
 }
-testDressPanel();
-//testOuterShell();
+//testDressPanel();
+testOuterShell();
