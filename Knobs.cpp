@@ -34,7 +34,7 @@ void ISR_A()
         else if (BFIRST==es)
         {
             es=ASECOND; // BFIRST->>ASECOND
-            knobEvents[Q_in]=(digitalRead(CPIN)==OPEN)?KE_RANGE_DN:KE_MODE_DN; 
+            knobEvents[Q_in]=(digitalRead(CPIN)==OPEN)?KE_RANGE_DN:KE_MODE_UP; 
             Q_in=(Q_in+1) & KNOB_Q_MASK;
         }
     }
@@ -50,7 +50,7 @@ void ISR_B()
         else if (AFIRST==es)
         {
             es=BSECOND;
-            knobEvents[Q_in]=(digitalRead(CPIN)==OPEN)?KE_RANGE_UP:KE_MODE_UP; 
+            knobEvents[Q_in]=(digitalRead(CPIN)==OPEN)?KE_RANGE_UP:KE_MODE_DN; 
             Q_in=(Q_in+1) & KNOB_Q_MASK;
 
         }

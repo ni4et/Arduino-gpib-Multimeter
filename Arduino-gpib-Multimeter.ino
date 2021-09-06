@@ -20,7 +20,8 @@ Adafruit_AlphaNum4 unitsDisp = Adafruit_AlphaNum4();
 #include "gpio.h"
 
 DMMShield dmm;
-extern int knobCount;
+
+unsigned long exRun;
 
 uint8_t ma[]={0,1,3,4,0,1,3,4};
 
@@ -108,6 +109,7 @@ void setup()
   digitalWrite(PIN_TONE,HIGH);
   
   tone(PIN_TONE,2500,1000);
+  exRun=millis();
 }
 
 char buf[16];
@@ -147,14 +149,26 @@ uint16_t stat;
   if (stat==HIGH)
   {
     val=DMM_DGetValue(&err);
+    if (err==ERRVAL_SUCCESS)
+    {
+      // Modification to limit reading to a value in range.
+      // No need to check if there is already an error.
+      // A value can still be out of range so we really dont want it in that case.
 
+      double range=DMM_GetScaleRange(0);
 
-    DMM_FormatValue(val,buf,1);
+      range*=1.1;
+      if (val>range) val=INFINITY;
+      if (val< -range) val=-INFINITY;
+    }
+    //Serial.print(range);Serial.println(val);
+
     //Serial.print(err);
     //Serial.print(" ");
-    Serial.println(buf);
     if ((err == ERRVAL_SUCCESS) && (val != INFINITY) && (val != -INFINITY )&& !DMM_IsNotANumber(val))
     {
+      DMM_FormatValue(val,buf,1);
+      //Serial.println(buf);
 
       writeNumber(buf);  // TO LED
       cp=buf+4;
@@ -167,5 +181,17 @@ uint16_t stat;
       writeUnits(" Err");
     }
   }
-  delay(100);
+  {
+    // Limit how fast we can loop:
+    unsigned long exNow=millis();
+    unsigned long diff=exNow-exRun; // Et from last time
+    // Diff should always be positive here
+    unsigned long tWait=500-diff;  // tWait cant be negative.
+
+    if (tWait>1000) tWait=1000;
+   
+    exRun=exNow;
+    delay(100);
+
+  }
 }

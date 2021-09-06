@@ -1,0 +1,13 @@
+#include <DMMShield.h>
+
+
+
+
+
+//Serial.print(" Mode: ");
+//Serial.print(newDmmMode);
+//Serial.print("/");
+///Serial.print(subMode);
+//Serial.print("/");
+//Serial.print(newDmmModeScale);
+//Serial.print(" === ");

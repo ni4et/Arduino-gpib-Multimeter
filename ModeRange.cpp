@@ -14,10 +14,11 @@ DMM_RANGE dmmRangeTable[][8]=
         DMMInvalidSetting,DMMInvalidSetting,DMMInvalidSetting,DMMInvalidSetting } , 
     { DmmResistance_5e7, DmmResistance_5e6, DmmResistance_5e5, DmmResistance_5e4,
          DmmResistance_5e3, DmmResistance_5e2, DmmResistance_5e1 ,DMMInvalidSetting},  
-    { DmmACCurrent_5e0, DmmACLowCurrent_5em1,DmmACLowCurrent_5em2,   DmmACLowCurrent_5em3,
-         DmmACLowCurrent_5em4 ,DMMInvalidSetting,DMMInvalidSetting,DMMInvalidSetting},
+    
     { DmmDCCurrent_5e0, DmmDCLowCurrent_5em1, DmmDCLowCurrent_5em2, DmmDCLowCurrent_5em3, 
         DmmDCLowCurrent_5em4 ,DMMInvalidSetting,DMMInvalidSetting,DMMInvalidSetting},
+    { DmmACCurrent_5e0, DmmACLowCurrent_5em1,DmmACLowCurrent_5em2,   DmmACLowCurrent_5em3,
+         DmmACLowCurrent_5em4 ,DMMInvalidSetting,DMMInvalidSetting,DMMInvalidSetting},
     { DmmContinuityRange, DmmDiodeRange,DMMInvalidSetting,DMMInvalidSetting,
         DMMInvalidSetting,DMMInvalidSetting,DMMInvalidSetting,DMMInvalidSetting }
 };

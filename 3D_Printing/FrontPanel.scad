@@ -44,13 +44,13 @@ difference()
 {
     union()
     {
-    *translate(DMM_Center+[0,-100,0])cube(size=[1,100,25],center=false);
+    translate(DMM_Center+[0,-4,0])color(c=[0,1,1,1]) cylinder(d=1,h=100,center=false);
         
         dressPanel(panelDim,lipHt, outsideR,outsideR-3.2,outsideR-5.5);
         // The holder for the display
         translate(dispCenter+[0,0,dispHolder.z/2] ) cube(dispHolder,center=true);
         // The holder for the DMM
-        translate(DMM_Center) DMM_Front_U();
+        color("cyan") translate(DMM_Center) DMM_Front_U();
         // Block for the speaker
         translate(SPK_Center+[0,0,3]) cylinder(d=SPK_HOLDER_DIA,h=SPK_HT);
         // Blocks for the screws
