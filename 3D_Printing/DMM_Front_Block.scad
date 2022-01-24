@@ -49,8 +49,79 @@ module DMM_Front_D()
 
     
 }
-difference()
+*difference()
 {
-    DMM_Front_U();
+    union(){
+        cylinder(r=1,h=50);
+        DMM_Front_U();
+    }
     DMM_Front_D();
 }
+
+
+Panel2ShoulderZ=44.5;
+Panel2BlockTopZ=Panel2ShoulderZ+5;
+Panel2TopInsulatorZ=22;
+Panel2TopConnectorZ=28;
+ConnectorDia=6.6;
+BridgeThk=2;
+
+
+HZ2=Panel2ShoulderZ-DMM_HolderSZ.z;
+HZ1=Panel2BlockTopZ-DMM_HolderSZ.z;
+HZ4=Panel2TopInsulatorZ-DMM_HolderSZ.z;
+HZ3=Panel2TopConnectorZ-DMM_HolderSZ.z;
+
+echo("HZ1-4",HZ1,HZ2,HZ3,HZ4);
+echo("HZ1-4+",HZ1+DMM_HolderSZ.z,HZ2+DMM_HolderSZ.z,HZ3+DMM_HolderSZ.z,HZ4+DMM_HolderSZ.z);
+
+BOARD_Neck=53.5;
+BOARD_TAIL_X=63.5;
+
+
+HX=DMM_HolderSZ.x;
+HY=DMM_HolderSZ.y;
+HZ=HZ1;
+
+boardSlot=[BOARD_Neck,50,30];
+
+
+
+module clamp()
+{
+   difference()
+   {
+      translate([0,-7,HZ/2] )
+      {
+          cube([HX,HY,HZ],center=true); // Main body
+      }
+       // Slot for board neck
+      translate([0,3,HZ1/2])
+            cube([BOARD_Neck,10,HZ1+0.1],center=true);
+      translate([0,3,HZ2/2])
+            cube([BOARD_TAIL_X,12,HZ2],center=true);
+ // Make a slot for the components on top of the board;.
+        translate([0,0,boardSlot.z/2+HZ3+BridgeThk]) cube(boardSlot,center=true);
+        for (x=DMM_JAX_X)
+        {
+            // Lower slots
+             translate([x,-DMM_JAX_Y,-.01])
+                cylinder(h=HZ4,d=DMM_JAX_UPPER_DIA);
+             translate([x-DMM_JAX_UPPER_DIA/2,-DMM_JAX_Y,0])
+                 cube([DMM_JAX_UPPER_DIA,20,HZ4]) ;
+            // Upper slots
+             translate([x,-DMM_JAX_Y,-.01])
+                cylinder(h=HZ3,d=ConnectorDia,center=false);
+             translate([x-ConnectorDia/2,-DMM_JAX_Y,0])
+                 cube([ConnectorDia,20,HZ3],center=false) ;
+        }
+        
+        // The clamp screws
+        #translate([DMM_ClampScrewOffset,-DMM_JAX_Y,0])  cylinder(h=HZ1+1,d=ClampHole,center=false);
+        #translate([-DMM_ClampScrewOffset,-DMM_JAX_Y,0]) cylinder(h=HZ1+1,d=ClampHole,center=false);
+
+ 
+   }
+}
+
+//color([.8,.8,1,1]) translate([0,0,0]) clamp();

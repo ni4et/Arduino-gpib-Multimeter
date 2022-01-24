@@ -38,6 +38,10 @@ outsideR=10;
 DMM_BOARD_X=66 ; // 63 NO FF FROM DRAWING
 DMM_BOARD_Y=3 ; // 1.6 NO FF Measured
 //DMM_Center=[50,-20,0];
+CPU_BOARD_X=54;
+CPU_BOARD_Y=3;
+CPU_BOARD_Z=102;
+
 
 // Extra board locations relative to the DMM board:
 CPU_Board_Loc=[0,27,6];  // Not using full width of the board
