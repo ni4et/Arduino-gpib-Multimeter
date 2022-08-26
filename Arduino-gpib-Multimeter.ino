@@ -21,7 +21,11 @@ Adafruit_AlphaNum4 unitsDisp = Adafruit_AlphaNum4();
 
 DMMShield dmm;
 
-unsigned long exRun;
+unsigned long exRun; // Used to schedule DMM
+
+typedef enum RUN_MODE {RM_DMM=0,RM_REMOTE,RM_CMD } RUN_MODE_t;
+RUN_MODE_t runMode=RM_DMM;
+
 
 uint8_t ma[]={0,1,3,4,0,1,3,4};
 
@@ -110,6 +114,8 @@ void setup()
   
   tone(PIN_TONE,2500,1000);
   exRun=millis();
+  runMode=RM_DMM;
+
 }
 
 char buf[16];
@@ -144,7 +150,7 @@ uint16_t stat;
       break;
   }
   
-  dmm.CheckForCommand();
+  //dmm.CheckForCommand();
   stat=digitalRead(PIN_SPI_MISO);
   if (stat==HIGH)
   {
@@ -195,3 +201,27 @@ uint16_t stat;
 
   }
 }
+
+#ifdef NEVER
+void loop()
+{
+  switch (runMode)
+  {
+  case RM_CMD:
+    /* code */
+    break;
+  case RM_REMOTE:
+    dmm.CheckForCommand();
+    break;
+  case RM_DMM:
+  default:
+    dmmloop();
+    if (Serial.available())
+      int rc=Serial.read();
+      if (rc='A')
+        runMode=RM_REMOTE;
+
+    break;
+  }
+}; //RM_DMM=0,RM_REMOTE,RM_CMD */
+#endif
