@@ -27,6 +27,8 @@ char buf[16]; // Used in loopDisplay()
 double val; // Most recent valid conversion
 uint8_t conversionError;
 
+double sumVal; // Averaging for the display.
+uint16_t sumCount;
 
 
 
@@ -237,7 +239,10 @@ void loop()
   {
     val=valBuf;
     conversionError=ce;
-    sequence=0;
+
+    sumVal+=val;
+    sumCount++;
+
   }
   else if (Serial.available())
   {
@@ -273,9 +278,18 @@ void loop()
         sequence=1;
         break;
       case 1:
-        loopDisplay(conversionError,val);
-        sequence=2;
-        Serial.print(conversionError,16);Serial.println(val);
+        if (sumCount>1) sequence=2;
+        break;
+      case 2:
+        loopDisplay(conversionError,(sumCount==0)?val:sumVal/sumCount);
+        Serial.print(exRun);Serial.print(" ");
+        Serial.print(millis());Serial.print(" ");
+          Serial.print(sumCount);Serial.print(" ");
+          Serial.print(conversionError,16);Serial.print(" ");
+          Serial.println((sumCount==0)?val:sumVal/sumCount,8);
+        sumVal=0;
+        sumCount=0;
+        sequence=3;
         break;
       default:
         break;
@@ -285,7 +299,7 @@ void loop()
   // Limit how fast we can loop:
   unsigned long exNow=millis();
   unsigned long diff=exNow-exRun; // Et from last time
-  if (diff>1000)
+  if (diff>1200)
   {
     exRun=exNow;
     sequence=0;
