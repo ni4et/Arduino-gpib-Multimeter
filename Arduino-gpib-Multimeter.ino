@@ -228,7 +228,7 @@ void loop()
   uint8_t ce;
 
   static uint16_t sequence=9999;
-  String cmdBuf;
+  static String cmdBuf;
 
 
 
@@ -244,18 +244,31 @@ void loop()
     sumCount++;
 
   }
-  else if (Serial.available())
+
+  if (Serial.available()>0)
   {
     char rec=Serial.read();
-    
+    //Serial.print(rec);
 
     switch (rec)
     {
     case '\n':
     case '\r':
       Serial.println("");
-
-      if (cmdBuf.length()>0) dmm.ProcessIndividualCmd( cmdBuf.c_str());
+      Serial.print(cmdBuf.length());Serial.println(" ");Serial.println(cmdBuf);
+      if (cmdBuf.length()>0)
+      {
+        if (cmdBuf.equalsIgnoreCase(String("*idn?")))
+          Serial.println("Homebrew GPIB DMM");
+        else if (cmdBuf.equalsIgnoreCase(String("val?")))
+        {
+          char formatBuf[16];
+          DMM_FormatValue(val,formatBuf,1);
+          Serial.println(formatBuf);
+        }
+        else
+          dmm.ProcessIndividualCmd( cmdBuf.c_str());
+      }
       cmdBuf="";
 
       Serial.print("\r> ");
@@ -264,7 +277,10 @@ void loop()
     
     default:
       cmdBuf+=rec;
-      Serial.print(rec);
+      Serial.print(rec,16);Serial.print(" ");
+      Serial.print(cmdBuf.length());Serial.println("---");Serial.println(cmdBuf);
+
+
       break;
     }
 
@@ -282,11 +298,13 @@ void loop()
         break;
       case 2:
         loopDisplay(conversionError,(sumCount==0)?val:sumVal/sumCount);
+#ifdef DEBUG_DISPLAY
         Serial.print(exRun);Serial.print(" ");
         Serial.print(millis());Serial.print(" ");
           Serial.print(sumCount);Serial.print(" ");
           Serial.print(conversionError,16);Serial.print(" ");
           Serial.println((sumCount==0)?val:sumVal/sumCount,8);
+#endif
         sumVal=0;
         sumCount=0;
         sequence=3;
