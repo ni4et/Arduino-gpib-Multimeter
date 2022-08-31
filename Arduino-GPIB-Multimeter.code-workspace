@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"arduino.disableIntelliSenseAutoGen": true,
+		"arduino.disableTestingOpen": true,
+		//"arduino.logLevel": "verbose",
+		"arduino.openPDEFiletype": true,
+		"arduino.skipHeaderProvider": true
+	}
+}

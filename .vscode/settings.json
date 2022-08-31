@@ -4,5 +4,6 @@
     "arduino.disableTestingOpen": true,
     "arduino.logLevel": "verbose",
     "arduino.openPDEFiletype": true,
-    "arduino.skipHeaderProvider": true
+    "arduino.skipHeaderProvider": true,
+    "C_Cpp.errorSquiggles": "Disabled"
 }

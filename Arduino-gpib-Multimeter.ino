@@ -20,14 +20,15 @@ Adafruit_AlphaNum4 unitsDisp = Adafruit_AlphaNum4();
 #include "gpio.h"
 
 DMMShield dmm;
-
+#define ERRVAL_NODATA (1)
 unsigned long exRun; // Used to schedule DMM
 
-typedef enum RUN_MODE {RM_DMM=0,RM_REMOTE,RM_CMD } RUN_MODE_t;
-RUN_MODE_t runMode=RM_DMM;
+char buf[16]; // Used in loopDisplay()
+double val; // Most recent valid conversion
+uint8_t conversionError;
 
 
-uint8_t ma[]={0,1,3,4,0,1,3,4};
+
 
 void writeUnits(const char * unit) // Expecting 4 characters
 {
@@ -47,6 +48,7 @@ void writeNumber(const char * nstring) // Expecting a string of at least 8 numbe
   uint16_t end;
   uint8_t c;
   bool dot=false;
+  static uint8_t ma[]={0,1,3,4,0,1,3,4}; // Write order for digit display
 
   // Start with clear buffer
   msbDisp.clear();
@@ -114,22 +116,14 @@ void setup()
   
   tone(PIN_TONE,2500,1000);
   exRun=millis();
-  runMode=RM_DMM;
+
 
 }
 
-char buf[16];
 
-void loop()
+//******************************
+void processKnobs()
 {
-  int ai;
-uint16_t stat;
-  char * cp;
-
-
-  double val;
-  uint8_t err;
-  
   KNOB_EVENT ke=loopKnobs();
   //Serial.print("KE: "); Serial.println(ke);
   switch( ke )
@@ -149,8 +143,18 @@ uint16_t stat;
     default:
       break;
   }
-  
-  //dmm.CheckForCommand();
+
+}
+
+
+//**************************
+uint8_t loopADC(double  * newVal)
+{
+  uint16_t stat=1; // Default value for no-reading available
+  uint8_t err=ERRVAL_NODATA;
+  double val=NAN;
+
+    
   stat=digitalRead(PIN_SPI_MISO);
   if (stat==HIGH)
   {
@@ -164,64 +168,127 @@ uint16_t stat;
       double range=DMM_GetScaleRange(0);
 
       range*=1.1;
-      if (val>range) val=INFINITY;
-      if (val< -range) val=-INFINITY;
-    }
-    //Serial.print(range);Serial.println(val);
+      if (val>range)
+      {
+         val=INFINITY;
+         err=ERRVAL_CALIB_NANDOUBLE;
+      }
+      if (val< -range)
+      {
+        val=-INFINITY;
+        err=ERRVAL_CALIB_NANDOUBLE;
 
-    //Serial.print(err);
-    //Serial.print(" ");
-    if ((err == ERRVAL_SUCCESS) && (val != INFINITY) && (val != -INFINITY )&& !DMM_IsNotANumber(val))
-    {
-      DMM_FormatValue(val,buf,1);
-      //Serial.println(buf);
-
-      writeNumber(buf);  // TO LED
-      cp=buf+4;
-      for (;*cp && *cp<'A';cp++);
-      writeUnits(cp);
-    }
-    else
-    {
-      writeNumber("--------");
-      writeUnits(" Err");
+      } 
     }
   }
+  if (err==ERRVAL_SUCCESS)
   {
-    // Limit how fast we can loop:
-    unsigned long exNow=millis();
-    unsigned long diff=exNow-exRun; // Et from last time
-    // Diff should always be positive here
-    unsigned long tWait=500-diff;  // tWait cant be negative.
+    *newVal=val; // Only if its good
+  }
+  return err;
+}
 
-    if (tWait>1000) tWait=1000;
-   
-    exRun=exNow;
-    delay(100);
 
+
+//******************************
+void loopDisplay(uint8_t err, double val)
+{
+  char * cp;
+  //Serial.print(err);
+  //Serial.print(" ");
+
+  if ((err == ERRVAL_SUCCESS) && (val != INFINITY) && (val != -INFINITY )&& !DMM_IsNotANumber(val))
+  {
+    DMM_FormatValue(val,buf,1);
+    //Serial.println(buf);
+
+    writeNumber(buf);  // TO LED
+    cp=buf+4;
+    for (;*cp && *cp<'A';cp++);
+    writeUnits(cp);
+  }
+  else
+  {
+    writeNumber("--------");
+    writeUnits(" Err");
   }
 }
 
-#ifdef NEVER
+//******************************
+//******************************
+//******************************
 void loop()
 {
-  switch (runMode)
-  {
-  case RM_CMD:
-    /* code */
-    break;
-  case RM_REMOTE:
-    dmm.CheckForCommand();
-    break;
-  case RM_DMM:
-  default:
-    dmmloop();
-    if (Serial.available())
-      int rc=Serial.read();
-      if (rc='A')
-        runMode=RM_REMOTE;
+  int ai;
 
-    break;
+
+  double valBuf;
+  uint8_t ce;
+
+  static uint16_t sequence=9999;
+  String cmdBuf;
+
+
+
+  // See if new data:
+  ce=loopADC(&valBuf);
+
+  if (ce!=ERRVAL_NODATA)
+  {
+    val=valBuf;
+    conversionError=ce;
+    sequence=0;
   }
-}; //RM_DMM=0,RM_REMOTE,RM_CMD */
-#endif
+  else if (Serial.available())
+  {
+    char rec=Serial.read();
+    
+
+    switch (rec)
+    {
+    case '\n':
+    case '\r':
+      Serial.println("");
+
+      if (cmdBuf.length()>0) dmm.ProcessIndividualCmd( cmdBuf.c_str());
+      cmdBuf="";
+
+      Serial.print("\r> ");
+
+      break;
+    
+    default:
+      cmdBuf+=rec;
+      Serial.print(rec);
+      break;
+    }
+
+  }
+  else
+  {
+    switch(sequence)
+    {
+      case 0:
+        processKnobs();
+        sequence=1;
+        break;
+      case 1:
+        loopDisplay(conversionError,val);
+        sequence=2;
+        Serial.print(conversionError,16);Serial.println(val);
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Limit how fast we can loop:
+  unsigned long exNow=millis();
+  unsigned long diff=exNow-exRun; // Et from last time
+  if (diff>1000)
+  {
+    exRun=exNow;
+    sequence=0;
+  }
+  
+}
