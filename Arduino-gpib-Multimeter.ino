@@ -229,8 +229,7 @@ void loop()
 
   static uint16_t sequence=9999;
   static String cmdBuf;
-
-
+  static bool echo=true;
 
   // See if new data:
   ce=loopADC(&valBuf);
@@ -248,14 +247,15 @@ void loop()
   if (Serial.available()>0)
   {
     char rec=Serial.read();
-    //Serial.print(rec);
+ 
 
     switch (rec)
     {
     case '\n':
     case '\r':
-      Serial.println("");
-      Serial.print(cmdBuf.length());Serial.println(" ");Serial.println(cmdBuf);
+      //Serial.println("");
+      //Serial.print(cmdBuf.length());Serial.println(" ");Serial.println(cmdBuf);
+      if (echo) Serial.println();
       if (cmdBuf.length()>0)
       {
         if (cmdBuf.equalsIgnoreCase(String("*idn?")))
@@ -269,18 +269,27 @@ void loop()
         else
           dmm.ProcessIndividualCmd( cmdBuf.c_str());
       }
+      //Serial.println(cmdBuf);
       cmdBuf="";
 
-      Serial.print("\r> ");
+      if (echo) Serial.print("\r> ");
 
       break;
+      case '\b':
+      case '\x7f':
+        if (cmdBuf.length()>0)
+        {
+          cmdBuf.remove(cmdBuf.length()-1);
+          if (echo) Serial.print("\b \b");
     
+        }
+        break;     
     default:
+      if (cmdBuf.length()==0 && rec=='*') echo=false; // *idn? is visa mode from here on.
       cmdBuf+=rec;
-      Serial.print(rec,16);Serial.print(" ");
-      Serial.print(cmdBuf.length());Serial.println("---");Serial.println(cmdBuf);
-
-
+      if (echo) Serial.print(rec); // Echo the character
+      //Serial.print(rec,16);Serial.print(" ");
+      //Serial.print(cmdBuf.length());Serial.println("---");Serial.println(cmdBuf);
       break;
     }
 
