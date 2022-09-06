@@ -30,6 +30,8 @@ uint8_t conversionError;
 double sumVal; // Averaging for the display.
 uint16_t sumCount;
 
+// dmm.cpp definition.  I need it here but wasn't declared outside of source.
+uint8_t DMM_GetScaleUnit(int idxScale, double *pdScaleFact, char *szUnitPrefix, char *szUnit);
 
 
 void writeUnits(const char * unit) // Expecting 4 characters
@@ -217,6 +219,80 @@ void loopDisplay(uint8_t err, double val)
 }
 
 //******************************
+void processCommand(String & cmdBuf)
+{
+  cmdBuf.trim();
+
+  if (cmdBuf.equalsIgnoreCase(String("*idn?")))
+    Serial.println("Homebrew GPIB DMM");
+  else if (cmdBuf.equalsIgnoreCase(String("val?")))
+  {
+    char formatBuf[16];
+    DMM_FormatValue(val,formatBuf,1);
+    Serial.println(formatBuf);
+  }
+  else if (cmdBuf.equalsIgnoreCase(String("mode?")))
+  {
+    int idxScale=DMM_GetCurrentScale(); /// Gets current scale
+    double sf;
+    double rng;
+    char prefix[4];
+    char unit[8];
+    DMM_GetScaleUnit( idxScale, &sf, prefix, unit);
+    rng=DMM_GetScaleRange(idxScale);
+    Serial.print(sf*rng); Serial.print(" ");Serial.print(prefix);Serial.println(unit);
+  }
+  else if (cmdBuf.substring(0,3).equalsIgnoreCase(String("mode")))
+  {
+    String dmmCommand;
+    cmdBuf=cmdBuf.substring(5); // "mode "
+    cmdBuf.trim(); // Leading spaces
+    dmmCommand.reserve(20);
+    dmmCommand="DMMSetScale "; // Start building
+
+    // Find the voltage/current/resistance range
+    int subRange=cmdBuf.toInt(); // 5,50,500 or 0
+    switch (subrange)
+    {
+      case 500:
+        cmdBuf=cmdBuf.substring(3); break;
+      case 50:
+        cmdBuf=cmdBuf.substring(2); break;
+      case 5:
+        cmdBuf=cmdBuf.substring(1); break;
+      default: break;
+    } // We can encode the # directly into the command;
+   
+   // we could have M, k or k, m, u or nothing
+    // If the command includes a scaling character figure out its meaning, ie 500m
+    char sf=cmdBuf[0];
+    switch(sf)
+    {
+      case 'M': cmdBuf=cmdBuf.substring(1); break;
+      case 'K': case 'k': sf='k' ;cmdBuf=cmdBuf.substring(1); break;
+      case 'm': cmdBuf=cmdBuf.substring(1); break;
+      case 'u': case 'U':  cmdBuf=cmdBuf.substring(1); break;
+      default: sf='\0'; break;
+    }
+
+    // We could have v, vac, i, iac, ohms, diode, or cont.
+
+    cmdBuf.toLowerCase();
+    if (cmdBuf[0]=='v') dmmCommand+="VoltageDC"+String(subRange)+sf
+    else if (cmdBuf[0]=='vdc') dmmCommand+="VoltageDC";
+    else if (cmdBuf[0]=='vac') dmmCommand+="VoltageAC";
+    else if (cmdBuf[0]=='a') dmmCommand+="CurrentDC";
+    else if (cmdBuf[0]=='adc') dmmCommand+="CurrentDC";
+    else if (cmdBuf[0]=='acc') dmmCommand+="CurrentAC";
+    else if (cmdBuf=='ohm') dmmCommand+="Resistance";
+    else if (cmdBuf=='diode') dmmCommand+="Diode";
+    else if (cmdBuf=='cont') dmmCommand+="Continuity";
+
+    // Finish the range:
+    dmmCmd+=String(subRange);
+    if (sf) dmmCommand=String(sf);
+    dmm.ProcessIndividualCmd( cmdBuf.c_str());
+}
 //******************************
 //******************************
 void loop()
@@ -258,16 +334,7 @@ void loop()
       if (echo) Serial.println();
       if (cmdBuf.length()>0)
       {
-        if (cmdBuf.equalsIgnoreCase(String("*idn?")))
-          Serial.println("Homebrew GPIB DMM");
-        else if (cmdBuf.equalsIgnoreCase(String("val?")))
-        {
-          char formatBuf[16];
-          DMM_FormatValue(val,formatBuf,1);
-          Serial.println(formatBuf);
-        }
-        else
-          dmm.ProcessIndividualCmd( cmdBuf.c_str());
+        processCommand(cmdBuf);
       }
       //Serial.println(cmdBuf);
       cmdBuf="";
