@@ -242,8 +242,9 @@ void processCommand(String & cmdBuf)
     rng=DMM_GetScaleRange(idxScale);
     Serial.print(sf*rng); Serial.print(" ");Serial.print(prefix);Serial.println(unit);
   }
-  else if (cmdBuf.substring(0,3).equalsIgnoreCase(String("mode")))
+  else if (cmdBuf.substring(0,4).equalsIgnoreCase(String("mode")))
   {
+    Serial.print("Processing mode command: ");Serial.println( cmdBuf);
     String dmmCommand;
     cmdBuf=cmdBuf.substring(5); // "mode "
     cmdBuf.trim(); // Leading spaces
@@ -252,7 +253,7 @@ void processCommand(String & cmdBuf)
 
     // Find the voltage/current/resistance range
     int subRange=cmdBuf.toInt(); // 5,50,500 or 0
-    switch (subrange)
+    switch (subRange)
     {
       case 500:
         cmdBuf=cmdBuf.substring(3); break;
@@ -265,6 +266,7 @@ void processCommand(String & cmdBuf)
    
    // we could have M, k or k, m, u or nothing
     // If the command includes a scaling character figure out its meaning, ie 500m
+    
     char sf=cmdBuf[0];
     switch(sf)
     {
@@ -274,24 +276,43 @@ void processCommand(String & cmdBuf)
       case 'u': case 'U':  cmdBuf=cmdBuf.substring(1); break;
       default: sf='\0'; break;
     }
+    Serial.println("cmdBuf so far:"+cmdBuf);
 
     // We could have v, vac, i, iac, ohms, diode, or cont.
 
     cmdBuf.toLowerCase();
-    if (cmdBuf[0]=='v') dmmCommand+="VoltageDC"+String(subRange)+sf
-    else if (cmdBuf[0]=='vdc') dmmCommand+="VoltageDC";
-    else if (cmdBuf[0]=='vac') dmmCommand+="VoltageAC";
-    else if (cmdBuf[0]=='a') dmmCommand+="CurrentDC";
-    else if (cmdBuf[0]=='adc') dmmCommand+="CurrentDC";
-    else if (cmdBuf[0]=='acc') dmmCommand+="CurrentAC";
-    else if (cmdBuf=='ohm') dmmCommand+="Resistance";
-    else if (cmdBuf=='diode') dmmCommand+="Diode";
-    else if (cmdBuf=='cont') dmmCommand+="Continuity";
 
+    Serial.println(String("Post sr:")+String(subRange,10)+String( "sf:")+String(sf)+String(" remaining:")+cmdBuf+String(":"));
+  
+    if (cmdBuf=="v") dmmCommand+="VoltageDC";
+    else if (cmdBuf=="vdc") dmmCommand+="VoltageDC";
+    else if (cmdBuf=="vac") dmmCommand+="VoltageAC";
+    else if (cmdBuf=="a") dmmCommand+="CurrentDC";
+    else if (cmdBuf=="adc") dmmCommand+="CurrentDC";
+    else if (cmdBuf=="aac") dmmCommand+="CurrentAC";
+    else if (cmdBuf=="ohm") dmmCommand+="Resistance";
+    else if (cmdBuf=="diode") dmmCommand+="Diode";
+    else if (cmdBuf=="cont") dmmCommand+="Continuity";
+    else {Serial.println("unrecognized:"+cmdBuf); subRange=0;}
+
+
+    //Serial.println("Built so far:", dmmCommand)
     // Finish the range:
-    dmmCmd+=String(subRange);
-    if (sf) dmmCommand=String(sf);
-    dmm.ProcessIndividualCmd( cmdBuf.c_str());
+    if (subRange>0) 
+    {
+      dmmCommand+=String(subRange);
+      if (sf) dmmCommand+=String(sf);
+    }
+
+    Serial.println(String("generated:")+dmmCommand);
+
+    dmm.ProcessIndividualCmd( dmmCommand.c_str());
+  }
+  else
+  {
+    Serial.println("Passing direct to dmm:"+cmdBuf);
+    dmm.ProcessIndividualCmd(cmdBuf.c_str());
+  }
 }
 //******************************
 //******************************
