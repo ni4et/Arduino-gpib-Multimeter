@@ -33,6 +33,7 @@ uint16_t sumCount;
 // dmm.cpp definition.  I need it here but wasn't declared outside of source.
 uint8_t DMM_GetScaleUnit(int idxScale, double *pdScaleFact, char *szUnitPrefix, char *szUnit);
 
+uint32_t serialBaud=9600;
 
 void writeUnits(const char * unit) // Expecting 4 characters
 {
@@ -104,7 +105,7 @@ void setup()
       msbDisp.begin(0x70); // For the seven segment.
       unitsDisp.begin(0x72); // For the seven segment.
 
-      Serial.begin(9600);
+      Serial.begin(serialBaud);
       Serial.println("Hello:");
       DMM_Init();
   dmm.begin(&Serial);
@@ -244,7 +245,7 @@ void processCommand(String & cmdBuf)
   }
   else if (cmdBuf.substring(0,4).equalsIgnoreCase(String("mode")))
   {
-    Serial.print("Processing mode command: ");Serial.println( cmdBuf);
+    //Serial.print("Processing mode command: ");Serial.println( cmdBuf);
     String dmmCommand;
     cmdBuf=cmdBuf.substring(5); // "mode "
     cmdBuf.trim(); // Leading spaces
@@ -276,13 +277,13 @@ void processCommand(String & cmdBuf)
       case 'u': case 'U':  cmdBuf=cmdBuf.substring(1); break;
       default: sf='\0'; break;
     }
-    Serial.println("cmdBuf so far:"+cmdBuf);
+    //Serial.println("cmdBuf so far:"+cmdBuf);
 
     // We could have v, vac, i, iac, ohms, diode, or cont.
 
     cmdBuf.toLowerCase();
 
-    Serial.println(String("Post sr:")+String(subRange,10)+String( "sf:")+String(sf)+String(" remaining:")+cmdBuf+String(":"));
+    //Serial.println(String("Post sr:")+String(subRange,10)+String( "sf:")+String(sf)+String(" remaining:")+cmdBuf+String(":"));
   
     if (cmdBuf=="v") dmmCommand+="VoltageDC";
     else if (cmdBuf=="vdc") dmmCommand+="VoltageDC";
@@ -304,13 +305,14 @@ void processCommand(String & cmdBuf)
       if (sf) dmmCommand+=String(sf);
     }
 
-    Serial.println(String("generated:")+dmmCommand);
-
+    //Serial.println(String("generated:")+dmmCommand);
+    Serial.end();
     dmm.ProcessIndividualCmd( dmmCommand.c_str());
+    Serial.begin(serialBaud);
   }
   else
   {
-    Serial.println("Passing direct to dmm:"+cmdBuf);
+    //Serial.println("Passing direct to dmm:"+cmdBuf);
     dmm.ProcessIndividualCmd(cmdBuf.c_str());
   }
 }
