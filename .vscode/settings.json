@@ -1,9 +1,0 @@
-{
-    "cmake.configureOnOpen": false,
-    "arduino.disableIntelliSenseAutoGen": true,
-    "arduino.disableTestingOpen": true,
-    "arduino.logLevel": "verbose",
-    "arduino.openPDEFiletype": true,
-    "arduino.skipHeaderProvider": true,
-    "C_Cpp.errorSquiggles": "Disabled"
-}

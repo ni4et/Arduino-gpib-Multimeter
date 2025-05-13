@@ -1,0 +1,1 @@
+arduino-cli compile --fqbn arduino:avr:mega --libraries C:\Users\david\AppData\Local\Arduino15\libraries

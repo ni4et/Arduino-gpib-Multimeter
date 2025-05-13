@@ -2,6 +2,10 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"name": "250513-184726-megaatmega2560",
+			"path": "../../../Users/david/OneDrive/Documents/PlatformIO/Projects/250513-184726-megaatmega2560"
 		}
 	],
 	"settings": {
