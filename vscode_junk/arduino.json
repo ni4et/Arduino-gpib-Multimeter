@@ -1,6 +1,0 @@
-{
-    "sketch": "Arduino-gpib-Multimeter.ino",
-    "board": "arduino:avr:mega",
-    "configuration": "cpu=atmega2560",
-    "output": "build"
-}
