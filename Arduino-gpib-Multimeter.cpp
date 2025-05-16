@@ -1,9 +1,9 @@
 
 
-//#include <gpio.h>
-//#include <serialno.h>
-//#include <spi.h>
-//#include <utils.h>
+#include <gpio.h>
+#include <serialno.h>
+#include <spi.h>
+#include <utils.h>
 
 #include <Wire.h> // Enable this line if using Arduino Uno, Mega, etc.
 //#include <Adafruit_GFX.h>
@@ -106,9 +106,10 @@ void setup()
       unitsDisp.begin(0x72); // For the seven segment.
 
       Serial.begin(serialBaud);
-      Serial.println("Hello:");
+      Serial.println("Hello: (20250514)");
       DMM_Init();
   dmm.begin(&Serial);
+
 
   writeUnits("Helo");
   //	dmm.ProcessIndividualCmd("DMMSetScale VoltageDC5");

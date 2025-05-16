@@ -3,6 +3,7 @@
     "board": "arduino:avr:mega",
     "configuration": "cpu=atmega2560",
     "output": "@build",
-    "port": "COM13",
-    "buildPreferences": []
+    "port": "COM3",
+    "buildPreferences": [],
+    "programmer": "avrisp"
 }
