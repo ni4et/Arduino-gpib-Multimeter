@@ -128,28 +128,33 @@ void setup()
 
 
 //******************************
-void processKnobs()
+bool processKnobs() // True if a knob was turned
 {
+  bool ret=false;
   KNOB_EVENT ke=loopKnobs();
   //Serial.print("KE: "); Serial.println(ke);
   switch( ke )
   {
     case KE_MODE_DN:
-        dmm.SetScale(modeChangeHander(-1));
+      dmm.SetScale(modeChangeHander(-1));
+      ret=true;
       break;
     case KE_MODE_UP:
-         dmm.SetScale(modeChangeHander(1));
+      dmm.SetScale(modeChangeHander(1));
+      ret=true;
       break;
-   case KE_RANGE_DN:
-         dmm.SetScale(rangeChangeHander(-1));
+    case KE_RANGE_DN:
+      dmm.SetScale(rangeChangeHander(-1));
+      ret=true;
       break;
-   case KE_RANGE_UP:
-        dmm.SetScale(rangeChangeHander(1));
+    case KE_RANGE_UP:
+      dmm.SetScale(rangeChangeHander(1));
+      ret=true;
       break;
     default:
       break;
   }
-
+  return ret;
 }
 
 
@@ -331,6 +336,16 @@ void loop()
   static String cmdBuf;
   static bool echo=true;
 
+  if (processKnobs()){ // TODO  - Reset the loop and display the range on the display
+     DMM_GetScaleRange(0); // Get the range
+     // Set the display to show the new range
+     // Reset the loop
+
+
+  }
+   
+
+
   // See if new data:
   ce=loopADC(&valBuf);
 
@@ -390,7 +405,7 @@ void loop()
     switch(sequence)
     {
       case 0:
-        processKnobs();
+        //processKnobs();
         sequence=1;
         break;
       case 1:
