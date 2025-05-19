@@ -78,48 +78,48 @@ uint8_t DMM_IsNotANumber(double dVal);
 /* ************************************************************************** */
 extern CALIBDATA calib; // defined in calib.c
 
-#define CALIB_ACCEPTANCE_DEFAULT    0.2
+#define CALIB_ACCEPTANCE_DEFAULT 0.2
 // mask unused register bits on configuration verification
-const static uint8_t dmmcfgmask[]={0x1F, 0xFE, 0xFF, 0xFF, 0x9F, 0xFF, 0xFF, 0xBF, 0xFF, 0x33, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xBC, 0xFC, 0xFF};
+const static uint8_t dmmcfgmask[] = {0x1F, 0xFE, 0xFF, 0xFF, 0x9F, 0xFF, 0xFF, 0xBF, 0xFF, 0x33, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xBC, 0xFC, 0xFF};
 
 // configuration, contains scale specific data
 const static PROGMEM DMMCFG dmmcfg[] = {
-//                                 0,    1,    2,    3,    4,    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,   16,   17,   18,   19,   20,   21,   22,   23,
-//                              INTE,  R20,  R21,  R22,  R23,  R24,  R25,  R26,  R27,  R28,  R29,  R2A,  R2B,  R2C,  R2D,  R2E,  R2F,  R30,  R31,  R32,  R33,  R34,  R35,  R36
-{DmmResistance, 5e7,  4,   1, {0x04, 0xC0, 0xCF, 0x17, 0x93, 0x85, 0x00, 0x00, 0x55, 0x55, 0x00, 0x00, 0x08, 0x00, 0x00, 0x80, 0x86, 0x80, 0xD1, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 6e7 /0.9/8388608      }, // 0 "50M Ohm"
-{DmmResistance, 5e6,  5,   1, {0x04, 0xC0, 0xCF, 0x17, 0x93, 0x85, 0x00, 0x00, 0x55, 0x55, 0x00, 0x00, 0x08, 0x00, 0x80, 0x80, 0x86, 0x80, 0xD1, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 6e6 /0.9/8388608      }, // 1 "5M Ohm"
-{DmmResistance, 5e5, 3,    1, {0x04, 0xC0, 0xCF, 0x17, 0x93, 0x85, 0x00, 0x00, 0x55, 0x55, 0x00, 0x00, 0x08, 0x00, 0x08, 0x80, 0x86, 0x80, 0xD1, 0x33, 0x20, 0x00, 0x00, 0x00}, 6e5 /0.9/8388608      }, // 2 "500k Ohm
-{DmmResistance, 5e4, 4 ,   1, {0x04, 0xC0, 0xCF, 0x17, 0x83, 0x85, 0x00, 0x00, 0x55, 0x00, 0x00, 0x00, 0x40, 0x00, 0x06, 0x44, 0x94, 0x80, 0xD3, 0x33, 0x20, 0x00, 0x00, 0x00}, 1e5 /0.9/8388608      }, // 3 "50k Ohm"
-{DmmResistance, 5e3, 5,    1, {0x04, 0xC0, 0xCF, 0x17, 0x83, 0x85, 0x00, 0x00, 0x55, 0x00, 0x00, 0x00, 0x40, 0x60, 0x00, 0x44, 0x94, 0x80, 0xD3, 0x33, 0x20, 0x00, 0x00, 0x00}, 1e4 /0.9/8388608      }, // 4 "5k Ohm"
-{DmmResistance, 5e2, 3,    1, {0x04, 0xC0, 0xCF, 0x17, 0x83, 0x35, 0x00, 0x00, 0x55, 0x00, 0x00, 0x00, 0x40, 0x06, 0x00, 0x44, 0x94, 0x80, 0xD2, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 1e3 /0.9/8388608      }, // 5 "500 Ohm"
-{DmmResistance, 5e1, 4,    1, {0x04, 0xC0, 0xCF, 0x17, 0x83, 0x35, 0x01, 0x00, 0x55, 0x00, 0x00, 0x00, 0x40, 0x06, 0x00, 0x44, 0x94, 0x80, 0xD2, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 1e2 /0.9/8388608      }, // 6 "50 Ohm"
-{DmmDCVoltage, 5e1,  4,    2, {0x04, 0x60, 0x00, 0x17, 0x8B, 0x01, 0x11, 0x00, 0x55, 0x31, 0x00, 0x22, 0x00, 0x00, 0x09, 0x28, 0xA0, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e0 /1.8/8388608    }, // 7 "50 V DC",
-{DmmDCVoltage, 5e0,  5,    2, {0x04, 0x60, 0x00, 0x17, 0x8B, 0x01, 0x11, 0x00, 0x55, 0x31, 0x00, 0x22, 0x00, 0x00, 0x90, 0x28, 0xA0, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e-1/1.8/8388608    }, //8 "5 V DC",
-{DmmDCVoltage, 5e-1, 3,    1, {0x04, 0xC0, 0x00, 0x17, 0x8B, 0x85, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x33, 0x28, 0x00, 0x00, 0x00}, 125e-2/1.8/8388608    }, //9 "500 mV DC"
-{DmmDCVoltage, 5e-2, 4,    1, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x35, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3C, 0x60, 0x00, 0x00, 0x00}, 125e-3/1.8/8388608    }, //10 "50 mV DC"
-{DmmACVoltage, 5e1,  4,    2, {0x10, 0xF2, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x31, 0xF8, 0x22, 0x00, 0x00, 0x0D, 0x28, 0xA0, 0xFF, 0xC7, 0x38, 0x20, 0x00, 0x00, 0x00}, 1e-3                  }, //11 "30 V AC"
-{DmmACVoltage, 5e0,  5,    2, {0x10, 0xF2, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x31, 0xF8, 0x22, 0x00, 0x00, 0xD0, 0x88, 0xA0, 0xFF, 0xC7, 0x38, 0x20, 0x02, 0x50, 0x0C}, 1e-4                  }, //12 "5 V AC"
-{DmmACVoltage, 5e-1, 3,    1, {0x10, 0x92, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3A, 0x28, 0x00, 0x00, 0x00}, 1e-5                  }, //13 "500 mV AC"
-{DmmACVoltage, 5e-2, 4,    1, {0x10, 0x52, 0xDD, 0x07, 0x03, 0x00, 0x13, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3A, 0x28, 0x00, 0x00, 0x00}, 1e-6                  }, //14 "50 mV AC"
-{DmmDCCurrent, 5e0,  5,    0, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x95, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e0/3.6/8388608     }, //15 "5 A DC"
-{DmmACCurrent, 5e0,  5,    0, {0x10, 0x52, 0xDD, 0x07, 0x03, 0x00, 0x13, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-4/2.16             }, //16 "5 A AC"
-{DmmContinuity,500,  3,    1, {0x04, 0x74, 0xCF, 0x17, 0x83, 0x35, 0x10, 0x00, 0x55, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x40, 0x86, 0x80, 0xD2, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 666e-7                }, //17 "Continuity
-{DmmDiode,     3.0,  5,    1, {0x04, 0xC0, 0xCF, 0x17, 0x8B, 0x8D, 0x10, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x08, 0x00, 0x40, 0x86, 0x80, 0xE2, 0x33, 0xA0, 0x00, 0x00, 0x00}, 666e-6                }, //18 "Diode
-{DmmDCLowCurrent, 5e-1, 3, 0, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x95, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e-2/1.8/8388608    }, //19 "500 mA DC"
-{DmmDCLowCurrent, 5e-2, 4, 0, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x35, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x3D, 0xA0, 0x00, 0x00, 0x00}, 125e-3/1.8/8388608    }, //20 "50 mA DC"
-{DmmDCLowCurrent, 5e-3, 5, 4, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x95, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e-4/1.8/8388608    }, //21 "5 mA DC"
-{DmmDCLowCurrent, 5e-4, 3, 4, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x35, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x3D, 0xA0, 0x00, 0x00, 0x00}, 125e-5/1.8/8388608    }, //22 "500 uA DC"
-{DmmACLowCurrent, 5e-1, 3, 0, {0x10, 0x92, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-5/1.08             }, //23 "500 mA AC"
-{DmmACLowCurrent, 5e-2, 4, 0, {0x10, 0x52, 0xDD, 0x07, 0x03, 0x00, 0x13, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-6/1.08             }, //24 "50 mA AC"
-{DmmACLowCurrent, 5e-3, 5, 4, {0x10, 0x92, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-7/1.08             }, //25 "5 mA AC"
-{DmmACLowCurrent, 5e-4, 3,  4, {0x10, 0x52, 0xDD, 0x07, 0x03, 0x00, 0x13, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-8/1.08             }, //26 "500 uA AC"
-{0}};
+    //                                 0,    1,    2,    3,    4,    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,   15,   16,   17,   18,   19,   20,   21,   22,   23,
+    //                              INTE,  R20,  R21,  R22,  R23,  R24,  R25,  R26,  R27,  R28,  R29,  R2A,  R2B,  R2C,  R2D,  R2E,  R2F,  R30,  R31,  R32,  R33,  R34,  R35,  R36
+    {DmmResistance, 5e7, 4, 1, {0x04, 0xC0, 0xCF, 0x17, 0x93, 0x85, 0x00, 0x00, 0x55, 0x55, 0x00, 0x00, 0x08, 0x00, 0x00, 0x80, 0x86, 0x80, 0xD1, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 6e7 / 0.9 / 8388608},       // 0 "50M Ohm"
+    {DmmResistance, 5e6, 5, 1, {0x04, 0xC0, 0xCF, 0x17, 0x93, 0x85, 0x00, 0x00, 0x55, 0x55, 0x00, 0x00, 0x08, 0x00, 0x80, 0x80, 0x86, 0x80, 0xD1, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 6e6 / 0.9 / 8388608},       // 1 "5M Ohm"
+    {DmmResistance, 5e5, 3, 1, {0x04, 0xC0, 0xCF, 0x17, 0x93, 0x85, 0x00, 0x00, 0x55, 0x55, 0x00, 0x00, 0x08, 0x00, 0x08, 0x80, 0x86, 0x80, 0xD1, 0x33, 0x20, 0x00, 0x00, 0x00}, 6e5 / 0.9 / 8388608},       // 2 "500k Ohm
+    {DmmResistance, 5e4, 4, 1, {0x04, 0xC0, 0xCF, 0x17, 0x83, 0x85, 0x00, 0x00, 0x55, 0x00, 0x00, 0x00, 0x40, 0x00, 0x06, 0x44, 0x94, 0x80, 0xD3, 0x33, 0x20, 0x00, 0x00, 0x00}, 1e5 / 0.9 / 8388608},       // 3 "50k Ohm"
+    {DmmResistance, 5e3, 5, 1, {0x04, 0xC0, 0xCF, 0x17, 0x83, 0x85, 0x00, 0x00, 0x55, 0x00, 0x00, 0x00, 0x40, 0x60, 0x00, 0x44, 0x94, 0x80, 0xD3, 0x33, 0x20, 0x00, 0x00, 0x00}, 1e4 / 0.9 / 8388608},       // 4 "5k Ohm"
+    {DmmResistance, 5e2, 3, 1, {0x04, 0xC0, 0xCF, 0x17, 0x83, 0x35, 0x00, 0x00, 0x55, 0x00, 0x00, 0x00, 0x40, 0x06, 0x00, 0x44, 0x94, 0x80, 0xD2, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 1e3 / 0.9 / 8388608},       // 5 "500 Ohm"
+    {DmmResistance, 5e1, 4, 1, {0x04, 0xC0, 0xCF, 0x17, 0x83, 0x35, 0x01, 0x00, 0x55, 0x00, 0x00, 0x00, 0x40, 0x06, 0x00, 0x44, 0x94, 0x80, 0xD2, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 1e2 / 0.9 / 8388608},       // 6 "50 Ohm"
+    {DmmDCVoltage, 5e1, 4, 2, {0x04, 0x60, 0x00, 0x17, 0x8B, 0x01, 0x11, 0x00, 0x55, 0x31, 0x00, 0x22, 0x00, 0x00, 0x09, 0x28, 0xA0, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e0 / 1.8 / 8388608},      // 7 "50 V DC",
+    {DmmDCVoltage, 5e0, 5, 2, {0x04, 0x60, 0x00, 0x17, 0x8B, 0x01, 0x11, 0x00, 0x55, 0x31, 0x00, 0x22, 0x00, 0x00, 0x90, 0x28, 0xA0, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e-1 / 1.8 / 8388608},     // 8 "5 V DC",
+    {DmmDCVoltage, 5e-1, 3, 1, {0x04, 0xC0, 0x00, 0x17, 0x8B, 0x85, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x33, 0x28, 0x00, 0x00, 0x00}, 125e-2 / 1.8 / 8388608},    // 9 "500 mV DC"
+    {DmmDCVoltage, 5e-2, 4, 1, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x35, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3C, 0x60, 0x00, 0x00, 0x00}, 125e-3 / 1.8 / 8388608},    // 10 "50 mV DC"
+    {DmmACVoltage, 5e1, 4, 2, {0x10, 0xF2, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x31, 0xF8, 0x22, 0x00, 0x00, 0x0D, 0x28, 0xA0, 0xFF, 0xC7, 0x38, 0x20, 0x00, 0x00, 0x00}, 1e-3},                       // 11 "30 V AC"
+    {DmmACVoltage, 5e0, 5, 2, {0x10, 0xF2, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x31, 0xF8, 0x22, 0x00, 0x00, 0xD0, 0x88, 0xA0, 0xFF, 0xC7, 0x38, 0x20, 0x02, 0x50, 0x0C}, 1e-4},                       // 12 "5 V AC"
+    {DmmACVoltage, 5e-1, 3, 1, {0x10, 0x92, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3A, 0x28, 0x00, 0x00, 0x00}, 1e-5},                      // 13 "500 mV AC"
+    {DmmACVoltage, 5e-2, 4, 1, {0x10, 0x52, 0xDD, 0x07, 0x03, 0x00, 0x13, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3A, 0x28, 0x00, 0x00, 0x00}, 1e-6},                      // 14 "50 mV AC"
+    {DmmDCCurrent, 5e0, 5, 0, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x95, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e0 / 3.6 / 8388608},      // 15 "5 A DC"
+    {DmmACCurrent, 5e0, 5, 0, {0x10, 0x52, 0xDD, 0x07, 0x03, 0x00, 0x13, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-4 / 2.16},                // 16 "5 A AC"
+    {DmmContinuity, 500, 3, 1, {0x04, 0x74, 0xCF, 0x17, 0x83, 0x35, 0x10, 0x00, 0x55, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x40, 0x86, 0x80, 0xD2, 0x3C, 0xA0, 0x00, 0x00, 0x00}, 666e-7},                    // 17 "Continuity
+    {DmmDiode, 3.0, 5, 1, {0x04, 0xC0, 0xCF, 0x17, 0x8B, 0x8D, 0x10, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x08, 0x00, 0x40, 0x86, 0x80, 0xE2, 0x33, 0xA0, 0x00, 0x00, 0x00}, 666e-6},                         // 18 "Diode
+    {DmmDCLowCurrent, 5e-1, 3, 0, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x95, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e-2 / 1.8 / 8388608}, // 19 "500 mA DC"
+    {DmmDCLowCurrent, 5e-2, 4, 0, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x35, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x3D, 0xA0, 0x00, 0x00, 0x00}, 125e-3 / 1.8 / 8388608}, // 20 "50 mA DC"
+    {DmmDCLowCurrent, 5e-3, 5, 4, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x95, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x33, 0x20, 0x00, 0x00, 0x00}, 125e-4 / 1.8 / 8388608}, // 21 "5 mA DC"
+    {DmmDCLowCurrent, 5e-4, 3, 4, {0x04, 0x00, 0x00, 0x17, 0x8B, 0x35, 0x11, 0x00, 0x55, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0xC7, 0x3D, 0xA0, 0x00, 0x00, 0x00}, 125e-5 / 1.8 / 8388608}, // 22 "500 uA DC"
+    {DmmACLowCurrent, 5e-1, 3, 0, {0x10, 0x92, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-5 / 1.08},            // 23 "500 mA AC"
+    {DmmACLowCurrent, 5e-2, 4, 0, {0x10, 0x52, 0xDD, 0x07, 0x03, 0x00, 0x13, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-6 / 1.08},            // 24 "50 mA AC"
+    {DmmACLowCurrent, 5e-3, 5, 4, {0x10, 0x92, 0xDD, 0x07, 0x03, 0x52, 0x10, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-7 / 1.08},            // 25 "5 mA AC"
+    {DmmACLowCurrent, 5e-4, 3, 4, {0x10, 0x52, 0xDD, 0x07, 0x03, 0x00, 0x13, 0x80, 0x25, 0x11, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x80, 0xC7, 0x3D, 0x28, 0x00, 0x00, 0x00}, 1e-8 / 1.08},            // 26 "500 uA AC"
+    {0}};
 DMMCFG curCfg;
-int idxCurrentScale = -1;   // stores the current selected scale
-char fUseCalib = 1;         // controls if calibration coefficients should be applied in DMM_DGetStatus
+int idxCurrentScale = -1; // stores the current selected scale
+char fUseCalib = 1;       // controls if calibration coefficients should be applied in DMM_DGetStatus
 
-//char sTmpDebug[100];
-//char sTmpDebug1[10];
+// char sTmpDebug[100];
+// char sTmpDebug1[10];
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Interface Functions                                               */
@@ -144,7 +144,7 @@ char fUseCalib = 1;         // controls if calibration coefficients should be ap
 void DMM_Init()
 {
     SPI_Init();
-	CALIB_Init();
+    CALIB_Init();
 }
 
 /***	DMM_SetScale
@@ -171,13 +171,12 @@ uint8_t DMM_SetScale(int idxScale)
 {
     // 0. Verify index
     uint8_t bResult = DMM_ERR_CheckIdxCalib(idxScale);
-    if(bResult != ERRVAL_SUCCESS)
+    if (bResult != ERRVAL_SUCCESS)
     {
         return bResult;
     }
-	// 1. Retrieve current Scale information from PROGMEM
-	memcpy_P(&curCfg, dmmcfg + idxScale, sizeof (DMMCFG));
-
+    // 1. Retrieve current Scale information from PROGMEM
+    memcpy_P(&curCfg, dmmcfg + idxScale, sizeof(DMMCFG));
 
     const int cbCfg = 24;
     uint8_t rgIn[24];
@@ -211,27 +210,27 @@ uint8_t DMM_SetScale(int idxScale)
     // Build command:
     //  MSB: 7 bits address: 0x1F
     //  LSB: 1 for read
-    bCmd =(0x1F<<1) | 1;
-//    DelayAprox10Us(500);
+    bCmd = (0x1F << 1) | 1;
+    //    DelayAprox10Us(500);
 
     // 5.1. Read 24 bytes, starting with 0x1F address, values placed in rgIn array
     DMM_GetCmdSPI(bCmd, cbCfg, rgIn);
-//    DelayAprox10Us(1000);
+    //    DelayAprox10Us(1000);
 
     // 5.2. Compare values from rgIn and dmmcfg[idxScale].cfg arrays
-     int i;
-     for(i = 0; i < cbCfg; i++){
-         if((rgIn[i]&dmmcfgmask[i])!=(curCfg.cfg[i]&dmmcfgmask[i]))
-         {
+    int i;
+    for (i = 0; i < cbCfg; i++)
+    {
+        if ((rgIn[i] & dmmcfgmask[i]) != (curCfg.cfg[i] & dmmcfgmask[i]))
+        {
             // DMM scale configuration verify failed;
-             return ERRVAL_DMM_CFGVERIFY;
-         }
-     }
+            return ERRVAL_DMM_CFGVERIFY;
+        }
+    }
 
-     // 6. Set idxScale as current scale
+    // 6. Set idxScale as current scale
     idxCurrentScale = idxScale;
     return ERRVAL_SUCCESS;
-
 }
 
 /***	DMM_ERR_CheckIdxCalib
@@ -252,7 +251,7 @@ uint8_t DMM_SetScale(int idxScale)
 */
 uint8_t DMM_ERR_CheckIdxCalib(int idxScale)
 {
-    uint8_t bResult = (idxScale >= 0) && (idxScale < DMM_CNTSCALES) ? ERRVAL_SUCCESS: ERRVAL_DMM_IDXCONFIG;
+    uint8_t bResult = (idxScale >= 0) && (idxScale < DMM_CNTSCALES) ? ERRVAL_SUCCESS : ERRVAL_DMM_IDXCONFIG;
     return bResult;
 }
 
@@ -288,20 +287,21 @@ double DMM_DGetValue(uint8_t *pbErr)
 
     double dVal;
     // wait until a valid value is retrieved or the timeout counter exceeds threshold
-    while(DMM_IsNotANumber(dVal = DMM_DGetStatus(&bErr)) && (cntTimeout++ < DMM_VALIDDATA_CNTTIMEOUT) && (bErr == ERRVAL_SUCCESS));
+    while (DMM_IsNotANumber(dVal = DMM_DGetStatus(&bErr)) && (cntTimeout++ < DMM_VALIDDATA_CNTTIMEOUT) && (bErr == ERRVAL_SUCCESS))
+        ;
     // detect timeout
-    if((bErr == ERRVAL_SUCCESS) && (cntTimeout >=  DMM_VALIDDATA_CNTTIMEOUT))
+    if ((bErr == ERRVAL_SUCCESS) && (cntTimeout >= DMM_VALIDDATA_CNTTIMEOUT))
     {
         bErr = ERRVAL_DMM_VALIDDATATIMEOUT;
     }
-    if(bErr == ERRVAL_SUCCESS && DMM_GetCurrentScale() == DMMVoltageDC50Scale)
+    if (bErr == ERRVAL_SUCCESS && DMM_GetCurrentScale() == DMMVoltageDC50Scale)
     {
         // compensate the not linear scale behavior
         dVal = DMM_CompensateVoltage50DCLinear(dVal);
     }
 
     // set error
-    if(pbErr)
+    if (pbErr)
     {
         *pbErr = bErr;
     }
@@ -332,7 +332,7 @@ double DMM_DGetValue(uint8_t *pbErr)
 **      When no error is detected, the error is set to ERRVAL_SUCCESS.
 **      The error is copied on the byte pointed by pbErr, if pbErr is not null.
 **      When errors are detected, the function returns NAN.
- **
+**
 */
 double DMM_DGetAvgValue(int cbSamples, uint8_t *pbErr)
 {
@@ -340,24 +340,24 @@ double DMM_DGetAvgValue(int cbSamples, uint8_t *pbErr)
     double dValAvg = 0.0, dVal;
     int i;
     int idxScale = DMM_GetCurrentScale();
-	uint8_t bErr  = DMM_ERR_CheckIdxCalib(idxScale);
+    uint8_t bErr = DMM_ERR_CheckIdxCalib(idxScale);
     uint8_t fAC;
-    if(bErr == ERRVAL_SUCCESS)
+    if (bErr == ERRVAL_SUCCESS)
     {
         fAC = DMM_FACScale(idxScale);
-        if(fAC)
+        if (fAC)
         {
             // use RMS (Quadratic mean) Average value for AC
-            for(i = 0; (i < cbSamples) && fValid; i++)
+            for (i = 0; (i < cbSamples) && fValid; i++)
             {
                 dVal = DMM_DGetValue(&bErr);
-                fValid = (bErr == ERRVAL_SUCCESS) && (dVal != INFINITY) && (dVal != -INFINITY )&& !DMM_IsNotANumber(dVal);
-                if(fValid)
+                fValid = (bErr == ERRVAL_SUCCESS) && (dVal != INFINITY) && (dVal != -INFINITY) && !DMM_IsNotANumber(dVal);
+                if (fValid)
                 {
                     dValAvg += pow(dVal, 2);
                 }
             }
-            if(fValid && cbSamples)
+            if (fValid && cbSamples)
             {
                 dValAvg /= cbSamples;
                 dValAvg = sqrt(dValAvg);
@@ -366,32 +366,31 @@ double DMM_DGetAvgValue(int cbSamples, uint8_t *pbErr)
         else
         {
             // use normal (Arithmetic mean) Average value for other than AC.
-            for(i = 0; (i < cbSamples) && fValid; i++)
+            for (i = 0; (i < cbSamples) && fValid; i++)
             {
                 dVal = DMM_DGetValue(&bErr);
-                fValid = (bErr == ERRVAL_SUCCESS) && (dVal != INFINITY) && (dVal != -INFINITY )&& !DMM_IsNotANumber(dVal);
-                if(fValid)
+                fValid = (bErr == ERRVAL_SUCCESS) && (dVal != INFINITY) && (dVal != -INFINITY) && !DMM_IsNotANumber(dVal);
+                if (fValid)
                 {
                     dValAvg += dVal;
                 }
             }
-            if(fValid && cbSamples)
+            if (fValid && cbSamples)
             {
                 dValAvg /= cbSamples;
             }
         }
     }
-    if(bErr != ERRVAL_SUCCESS)
+    if (bErr != ERRVAL_SUCCESS)
     {
         dValAvg = NAN;
     }
-    if(pbErr)
+    if (pbErr)
     {
         *pbErr = bErr;
     }
     return dValAvg;
 }
-
 
 /***	DMM_GetCurrentScale
 **
@@ -611,13 +610,13 @@ uint8_t DMM_IsNotANumber(double dVal)
 uint8_t DMM_GetScaleUnit(int idxScale, double *pdScaleFact, char *szUnitPrefix, char *szUnit)
 {
     uint8_t bResult = DMM_ERR_CheckIdxCalib(idxScale);
-    if(bResult == ERRVAL_SUCCESS)
+    if (bResult == ERRVAL_SUCCESS)
     {
         // valid idxScale
-        if(pdScaleFact && szUnit)
+        if (pdScaleFact && szUnit)
         {
             // the pointers are not null
-            if(curCfg.range < 1e-3)
+            if (curCfg.range < 1e-3)
             {
                 // micro
                 strcpy(szUnitPrefix, "u");
@@ -625,7 +624,7 @@ uint8_t DMM_GetScaleUnit(int idxScale, double *pdScaleFact, char *szUnitPrefix, 
             }
             else
             {
-                if((curCfg.range >= 1e-3) && (curCfg.range < 1))
+                if ((curCfg.range >= 1e-3) && (curCfg.range < 1))
                 {
                     // mili
                     strcpy(szUnitPrefix, "m");
@@ -633,7 +632,7 @@ uint8_t DMM_GetScaleUnit(int idxScale, double *pdScaleFact, char *szUnitPrefix, 
                 }
                 else
                 {
-                    if((curCfg.range >= 1) && (curCfg.range < 1e3))
+                    if ((curCfg.range >= 1) && (curCfg.range < 1e3))
                     {
                         // unit
                         szUnitPrefix[0] = 0; // empty string
@@ -641,7 +640,7 @@ uint8_t DMM_GetScaleUnit(int idxScale, double *pdScaleFact, char *szUnitPrefix, 
                     }
                     else
                     {
-                        if((curCfg.range >= 1e3) && (curCfg.range < 1e6))
+                        if ((curCfg.range >= 1e3) && (curCfg.range < 1e6))
                         {
                             // kilo
                             strcpy(szUnitPrefix, "k");
@@ -657,30 +656,41 @@ uint8_t DMM_GetScaleUnit(int idxScale, double *pdScaleFact, char *szUnitPrefix, 
                 }
             }
             // detect measuring unit, depending on type
-            switch(curCfg.mode)
+            switch (curCfg.mode)
             {
-                case DmmDCVoltage:
-                case DmmACVoltage:
-                case DmmDiode:
-                    strcpy(szUnit, "V");
-                    break;
-                case DmmDCCurrent:
-                case DmmACCurrent:
-                case DmmDCLowCurrent:
-                case DmmACLowCurrent:
-                    strcpy(szUnit, "A");
-                    break;
-                case DmmResistance:
-                case DmmContinuity:
-                    strcpy(szUnit, "Ohm");
-                    break;
+            case DmmDCVoltage:
+                strcpy(szUnit, "V");
+                break;
+
+            case DmmACVoltage:
+                strcpy(szUnit, "VAC");
+                break;
+            case DmmDiode:
+                strcpy(szUnit, "DIOD");
+                break;
+            case DmmDCCurrent:
+                strcpy(szUnit, "I");
+                break;
+            case DmmACCurrent:
+                strcpy(szUnit, "IAC");
+                break;
+            case DmmDCLowCurrent:
+                strcpy(szUnit, "Ilc");
+                break;
+            case DmmACLowCurrent:
+                strcpy(szUnit, "AACl");
+                break;
+            case DmmResistance:
+                strcpy(szUnit, "Ohm");
+                break;
+            case DmmContinuity:
+                strcpy(szUnit, "CONT");
+                break;
             }
         }
     }
     return bResult;
 }
-
-
 
 /***	DMM_FormatValue
 **
@@ -711,15 +721,16 @@ uint8_t DMM_GetScaleUnit(int idxScale, double *pdScaleFact, char *szUnitPrefix, 
 */
 uint8_t DMM_FormatValue(double dVal, char *pString, uint8_t fUnit)
 {
+    // TODO Unreachable code be here./
     // default 6 decimals
     double dScaleFact;
     char szUnitPrefix[2], szUnit[5];
     uint8_t bResult = DMM_ERR_CheckIdxCalib(idxCurrentScale);
-    if(bResult == ERRVAL_SUCCESS)
+    if (bResult == ERRVAL_SUCCESS)
     {
         if (dVal == INFINITY)
         {
-            if(curCfg.mode == DmmContinuity)
+            if (curCfg.mode == DmmContinuity)
             {
                 strcpy(pString, "OPEN");
             }
@@ -732,7 +743,7 @@ uint8_t DMM_FormatValue(double dVal, char *pString, uint8_t fUnit)
         {
             if (dVal == -INFINITY)
             {
-                if(curCfg.mode == DmmContinuity)
+                if (curCfg.mode == DmmContinuity)
                 {
                     strcpy(pString, "OPEN");
                 }
@@ -744,13 +755,13 @@ uint8_t DMM_FormatValue(double dVal, char *pString, uint8_t fUnit)
             else
             {
                 bResult = DMM_GetScaleUnit(idxCurrentScale, &dScaleFact, szUnitPrefix, szUnit);
-                if(bResult == ERRVAL_SUCCESS)
+                if (bResult == ERRVAL_SUCCESS)
                 {
                     // valid idxScale
                     dVal *= dScaleFact;
-                    //sprintf(pString, "%.6lf", dVal);
-					SPrintfDouble(pString, dVal, curCfg.digits);
-                    if(fUnit)
+                    // sprintf(pString, "%.6lf", dVal);
+                    SPrintfDouble(pString, dVal, curCfg.digits);
+                    if (fUnit)
                     {
                         strcat(pString, " ");
                         strcat(pString, szUnitPrefix);
@@ -759,7 +770,7 @@ uint8_t DMM_FormatValue(double dVal, char *pString, uint8_t fUnit)
                 }
             }
         }
-        if(curCfg.mode == DmmDiode && dVal > DMM_DIODEOPENTHRESHOLD )
+        if (curCfg.mode == DmmDiode && dVal > DMM_DIODEOPENTHRESHOLD)
         {
             strcpy(pString, "OPEN");
         }
@@ -798,49 +809,49 @@ uint8_t DMM_InterpretValue(char *pString, double *pdVal)
     char szUnitPrefix[2], szUnit[5];
     uint8_t bResult = ERRVAL_SUCCESS;
     // trim the blank values at the end of the string
-    while(pString[szLen - 1] == ' ')
+    while (pString[szLen - 1] == ' ')
     {
         pString[szLen - 1] = 0;
-        szLen --;
+        szLen--;
     }
-    if( !strcmp(pString, "OVERLOAD") || !strcmp(pString, "OPEN"))
+    if (!strcmp(pString, "OVERLOAD") || !strcmp(pString, "OPEN"))
     {
         *pdVal = INFINITY;
     }
     else
     {
         bResult = DMM_GetScaleUnit(idxCurrentScale, &dScaleFact, szUnitPrefix, szUnit);
-        if(bResult == ERRVAL_SUCCESS)
+        if (bResult == ERRVAL_SUCCESS)
         {
             // valid idxScale
-            if(!(pString[szLen - 1] >= '0' && pString[szLen - 1] <= '9'))
+            if (!(pString[szLen - 1] >= '0' && pString[szLen - 1] <= '9'))
             {
                 // the string does not end with numeric char, it contains Unit.
                 dScaleFact = 1;
                 // look for the szUnit at the end of the provided string
                 szLenUnit = strlen(szUnit);
-                if(!strcmp(szUnit, pString + szLen - szLenUnit))
+                if (!strcmp(szUnit, pString + szLen - szLenUnit))
                 {
                     szLen -= szLenUnit; // remove Unit length
                     // look for any multiple / submultiple prefix before the Unit
-                    switch(pString[szLen - 1])
+                    switch (pString[szLen - 1])
                     {
-                        case 'u':
-                            dScaleFact = 1e6;
-                            szLen--;    // remove prefix length
-                            break;
-                        case 'm':
-                            dScaleFact = 1e3;
-                            szLen--;    // remove prefix length
-                            break;
-                        case 'k':
-                            dScaleFact = 1e-3;
-                            szLen--;    // remove prefix length
-                            break;
-                        case 'M':
-                            dScaleFact = 1e-6;
-                            szLen--;    // remove prefix length
-                            break;
+                    case 'u':
+                        dScaleFact = 1e6;
+                        szLen--; // remove prefix length
+                        break;
+                    case 'm':
+                        dScaleFact = 1e3;
+                        szLen--; // remove prefix length
+                        break;
+                    case 'k':
+                        dScaleFact = 1e-3;
+                        szLen--; // remove prefix length
+                        break;
+                    case 'M':
+                        dScaleFact = 1e-6;
+                        szLen--; // remove prefix length
+                        break;
                     }
                 }
                 else
@@ -848,25 +859,25 @@ uint8_t DMM_InterpretValue(char *pString, double *pdVal)
                     // wrong Unit
                     bResult = ERRVAL_CMD_VALWRONGUNIT;
                 }
-            }   // end check for measure unit
+            } // end check for measure unit
             else
             {
                 // the last character is numeric, missing measure unit
                 // use the scale unit / multiple which are already set after call to DMM_GetScaleUnit
             }
-            if(bResult == ERRVAL_SUCCESS)
+            if (bResult == ERRVAL_SUCCESS)
             {
                 // trim the string to eliminate Unit Prefix and Unit
                 pString[szLen] = 0;
                 // trim the blank values at the end of the string
-                while(pString[szLen - 1] == ' ')
+                while (pString[szLen - 1] == ' ')
                 {
                     pString[szLen - 1] = 0;
-                    szLen --;
+                    szLen--;
                 }
                 // extract the value
-				*pdVal = atof(pString);
-				*pdVal /= dScaleFact;
+                *pdVal = atof(pString);
+                *pdVal /= dScaleFact;
             }
         }
     }
@@ -918,15 +929,14 @@ uint8_t DMM_FDCCurrentScale()
 void DMM_ConfigSwitches(uint8_t sw)
 {
     // control sw RLD
-	GPIO_SetValue_RLD(sw & 1);
+    GPIO_SetValue_RLD(sw & 1);
 
     // control sw RLU
-	GPIO_SetValue_RLU((sw & 2) >> 1);
+    GPIO_SetValue_RLU((sw & 2) >> 1);
 
     // control sw RLI
-	GPIO_SetValue_RLI((sw & 4) >> 2);
+    GPIO_SetValue_RLI((sw & 4) >> 2);
 }
-
 
 /***	DMM_SendCmdSPI
 **
@@ -950,19 +960,18 @@ void DMM_SendCmdSPI(uint8_t bCmd, int bytesNumber, uint8_t *pbWrData)
     int i;
     GPIO_SetValue_CS_DMM(0); // Activate CS_DMM
 
-//    DelayAprox10Us(10);
+    //    DelayAprox10Us(10);
     // Send command byte
     SPI_CoreTransferByte(bCmd);
 
     // Send the requested number of bytes
-    for(i = 0; i< bytesNumber; i++)
+    for (i = 0; i < bytesNumber; i++)
     {
         SPI_CoreTransferByte(pbWrData[i]);
     }
-//    DelayAprox10Us(10);
+    //    DelayAprox10Us(10);
     GPIO_SetValue_CS_DMM(1); // Deactivate CS_DMM
 }
-
 
 /***	DMM_GetCmdSPI
 **
@@ -986,31 +995,31 @@ void DMM_GetCmdSPI(uint8_t bCmd, int bytesNumber, uint8_t *pbRdData)
     int i;
 
     GPIO_SetValue_CS_DMM(0); // Activate CS_DMM
-//    DelayAprox10Us(10);
+                             //    DelayAprox10Us(10);
 
     // Send command byte
     SPI_CoreTransferByte(bCmd);
 
     // Generate an extra clock (called SPI Read Period)
-    GPIO_SetValue_CLK(1);                // set the clock line
-//    DelayAprox10Us(SPI_CLK_DELAY);  // some delay
-    GPIO_SetValue_CLK(0);                // reset the clock line
-//    DelayAprox10Us(SPI_CLK_DELAY);  // some delay
+    GPIO_SetValue_CLK(1); // set the clock line
+                          //    DelayAprox10Us(SPI_CLK_DELAY);  // some delay
+    GPIO_SetValue_CLK(0); // reset the clock line
+                          //    DelayAprox10Us(SPI_CLK_DELAY);  // some delay
 
     // Receive the requested number of bytes
-    for(i = 0; i< bytesNumber; i++)
+    for (i = 0; i < bytesNumber; i++)
     {
         pbRdData[i] = SPI_CoreTransferByte(0);
     }
-//    DelayAprox10Us(10);
+    //    DelayAprox10Us(10);
     GPIO_SetValue_CS_DMM(1); // Deactivate CS_DMM
 }
 
 double DMM_TmpDebugDGetStatus(uint8_t *pbErr, char *pString)
 {
-	double dResult = DMM_DGetStatus(pbErr);
-//	strcpy(pString, sTmpDebug);
-	return dResult;
+    double dResult = DMM_DGetStatus(pbErr);
+    //	strcpy(pString, sTmpDebug);
+    return dResult;
 }
 /***	DMM_DGetStatus
 **
@@ -1041,12 +1050,12 @@ double DMM_DGetStatus(uint8_t *pbErr)
     int i;
     double v;
     v = NAN;
-    digitalWrite(5,HIGH);
+    digitalWrite(5, HIGH);
     // 1. Verify index
     uint8_t bResult = DMM_ERR_CheckIdxCalib(idxCurrentScale);
-    if(bResult != ERRVAL_SUCCESS)
+    if (bResult != ERRVAL_SUCCESS)
     {
-        if(pbErr)
+        if (pbErr)
         {
             *pbErr = bResult;
         }
@@ -1066,64 +1075,60 @@ double DMM_DGetStatus(uint8_t *pbErr)
     // 3. Compute value, according to the specific scale
 
     // AD1 signed value
-    int32_t vad1 = ((int32_t)dmmsts.ad1[2]<<24)|((int32_t)dmmsts.ad1[1]<<16)|((int32_t)dmmsts.ad1[0]<<8);
+    int32_t vad1 = ((int32_t)dmmsts.ad1[2] << 24) | ((int32_t)dmmsts.ad1[1] << 16) | ((int32_t)dmmsts.ad1[0] << 8);
     vad1 /= 256;
 
-   // RMS for AC
-	uint8_t rms32;
-#if defined (__arm__) && defined (__SAM3X8E__) // Arduino Due compatible
-	// for 32 bits architecture, do not use 4 bytes RMS.
-	rms32 = 0;
+    // RMS for AC
+    uint8_t rms32;
+#if defined(__arm__) && defined(__SAM3X8E__) // Arduino Due compatible
+    // for 32 bits architecture, do not use 4 bytes RMS.
+    rms32 = 0;
 #else
-	// if MS Byte is 0, use only 4 bytes RMS
-	rms32 = (dmmsts.rms[4-i] != 0) ? 1:0;
+    // if MS Byte is 0, use only 4 bytes RMS
+    rms32 = (dmmsts.rms[4 - i] != 0) ? 1 : 0;
 #endif
 
     int64_t vrms = 0;
-    for(i = 0; i < 5; i++)
-	{
-		vrms <<= 8;
-        vrms |= dmmsts.rms[4-i];
+    for (i = 0; i < 5; i++)
+    {
+        vrms <<= 8;
+        vrms |= dmmsts.rms[4 - i];
     }
-	if(rms32)
-	{
-		vrms >>= 8;
-	}
+    if (rms32)
+    {
+        vrms >>= 8;
+    }
 
-
-
-    if(DMM_FACScale(idxCurrentScale))
+    if (DMM_FACScale(idxCurrentScale))
     { // AC uses RMS
-        if(dmmsts.intf & 0x10)
+        if (dmmsts.intf & 0x10)
         { // conversion done
-            if(fUseCalib)
+            if (fUseCalib)
             {
                 // apply calibration coefficients
-				if(rms32)
-				{
-					// ignore noise on LSB byte
-					v = sqrt(fabs((double)256*((pow(curCfg.mul,2)*(double)(vrms))) - pow(calib.Dmm[idxCurrentScale].Add,2)))*(1.0+calib.Dmm[idxCurrentScale].Mult);
-				}
-				else
-				{
-					// Arduino Due compatible or zero MS byte
-					v = sqrt(fabs(pow(curCfg.mul,2)*(double)(vrms) - pow(calib.Dmm[idxCurrentScale].Add,2)))*(1.0+calib.Dmm[idxCurrentScale].Mult);
-				}
-
+                if (rms32)
+                {
+                    // ignore noise on LSB byte
+                    v = sqrt(fabs((double)256 * ((pow(curCfg.mul, 2) * (double)(vrms))) - pow(calib.Dmm[idxCurrentScale].Add, 2))) * (1.0 + calib.Dmm[idxCurrentScale].Mult);
+                }
+                else
+                {
+                    // Arduino Due compatible or zero MS byte
+                    v = sqrt(fabs(pow(curCfg.mul, 2) * (double)(vrms)-pow(calib.Dmm[idxCurrentScale].Add, 2))) * (1.0 + calib.Dmm[idxCurrentScale].Mult);
+                }
             }
             else
             {
-				if(rms32)
-				{
-					// ignore noise on LSB byte
-					v = (double)16*(curCfg.mul*sqrt((double)vrms));
-				}
-				else
-				{
-					// Arduino Due compatible or zero MS byte
-					v = curCfg.mul*sqrt((double)vrms);
-				}
-
+                if (rms32)
+                {
+                    // ignore noise on LSB byte
+                    v = (double)16 * (curCfg.mul * sqrt((double)vrms));
+                }
+                else
+                {
+                    // Arduino Due compatible or zero MS byte
+                    v = curCfg.mul * sqrt((double)vrms);
+                }
             }
         }
         else
@@ -1133,26 +1138,26 @@ double DMM_DGetStatus(uint8_t *pbErr)
     }
     else
     { // AD1 value
-        if(dmmsts.intf & 0x04)
+        if (dmmsts.intf & 0x04)
         { // conversion done
-            if(vad1 >= 0x7FFFFE)
+            if (vad1 >= 0x7FFFFE)
             {
-                v = INFINITY;   // value outside convertor range
+                v = INFINITY; // value outside convertor range
             }
             else
             {
-                if(vad1 <= -0x7FFFFE)
+                if (vad1 <= -0x7FFFFE)
                 {
-                   v = -INFINITY;   // value outside convertor range
+                    v = -INFINITY; // value outside convertor range
                 }
-               else
-               {
-                   v = curCfg.mul*vad1;
+                else
+                {
+                    v = curCfg.mul * vad1;
 
-                    if(fUseCalib)
+                    if (fUseCalib)
                     {
-                       // apply calibration coefficients
-                       v = v*(1.0+calib.Dmm[idxCurrentScale].Mult) + calib.Dmm[idxCurrentScale].Add;
+                        // apply calibration coefficients
+                        v = v * (1.0 + calib.Dmm[idxCurrentScale].Mult) + calib.Dmm[idxCurrentScale].Add;
                     }
                 }
             }
@@ -1162,14 +1167,13 @@ double DMM_DGetStatus(uint8_t *pbErr)
             v = NAN; // not ready
         }
     }
-    if(pbErr)
+    if (pbErr)
     {
         *pbErr = ERRVAL_SUCCESS;
     }
-    digitalWrite(5,LOW);
+    digitalWrite(5, LOW);
     return v;
 }
-
 
 /***	DMM_CompensateVoltage50DCLinear
 **
@@ -1192,9 +1196,9 @@ double DMM_DGetStatus(uint8_t *pbErr)
 double DMM_CompensateVoltage50DCLinear(double dVal)
 {
     double dCompensatedVal;
-    if(!DMM_IsNotANumber(dVal))
+    if (!DMM_IsNotANumber(dVal))
     {
-       dCompensatedVal = dVal * dVal * dVal * DMM_Voltage50DCLinearCoeff_P3 + dVal * DMM_Voltage50DCLinearCoeff_P1 + dVal * DMM_Voltage50DCLinearCoeff_P0;
+        dCompensatedVal = dVal * dVal * dVal * DMM_Voltage50DCLinearCoeff_P3 + dVal * DMM_Voltage50DCLinearCoeff_P1 + dVal * DMM_Voltage50DCLinearCoeff_P0;
     }
     else
     {

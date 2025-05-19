@@ -3,24 +3,17 @@
 	"tasks": [
 		{
 			"type": "shell",
-		
 			"label": "C/C++: build active file",
 			"command": "arduino-cli compile --fqbn arduino:avr:mega --library C:\\WORK\\Arduino\\Arduino-gpib-Multimeter\\library\\Arduino-DMMShield-Library-master --libraries C:\\Users\\david\\AppData\\Local\\Arduino15\\libraries",
-			
 			"group": "build",
 			"detail": "compiler: arduino-cli"
-
 		},
 		{
 			"type": "shell",
-		
 			"label": "UPLOAD active file",
 			"command": "arduino-cli upload --fqbn arduino:avr:mega -p COM3",
-			
-			"group": "build", 
+			"group": "build",
 			"detail": "compiler: arduino-cli"
-
 		}
-
 	]
 }

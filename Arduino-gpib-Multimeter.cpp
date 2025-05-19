@@ -103,7 +103,7 @@ void setup()
   unitsDisp.begin(0x72); // For the seven segment.
 
   Serial.begin(serialBaud);
-  Serial.println("Hello: (20250514)");
+  Serial.println("Hello: (20250519)");
   DMM_Init();
   dmm.begin(&Serial);
 
@@ -116,7 +116,7 @@ void setup()
   pinMode(PIN_TONE, OUTPUT);
   digitalWrite(PIN_TONE, HIGH);
 
-  tone(PIN_TONE, 2500, 1000);
+  tone(PIN_TONE, 800, 100);
   exRun = millis();
 }
 
@@ -208,11 +208,16 @@ void loopDisplay(uint8_t err, double val)
     for (; *cp && *cp < 'A'; cp++)
       ; // Find the first character that is not a number
     writeUnits(cp);
+    // Serial.print("Display Buffer: ");
+    // Serial.println(displayBuffer);
   }
   else
   {
-    writeNumber("--------");
-    writeUnits(" Err");
+    // Serial.print("Display Buffer: ");
+    // Serial.println(displayBuffer);
+
+    writeNumber("------ ");
+    writeUnits("OPEN");
   }
 }
 
@@ -240,10 +245,10 @@ bool processCommand(String &cmdBuf) // True if range change
     char unit[8];
     DMM_GetScaleUnit(idxScale, &sf, prefix, unit);
     rng = DMM_GetScaleRange(idxScale);
-    Serial.print(sf * rng);
-    Serial.print(" ");
-    Serial.print(prefix);
-    Serial.println(unit);
+    // Serial.print(sf * rng);
+    // Serial.print(" ");
+    // Serial.print(prefix);
+    // Serial.println(unit);
   }
   else if (cmdBuf.substring(0).equalsIgnoreCase(String("mode ")))
   {
@@ -390,11 +395,12 @@ bool checkSerialCommand() // Return true if s range change happened/
     }
     return rv; // Indicating no range change
   }
+  return false; // TODO - Broken apparently
 }
 //******************************
 void loop()
 {
-  static unsigned long nextReportDue = 0; // When to finish averaging and display it.
+  static unsigned long nextReportDue = millis() + 3000; // When to finish averaging and display it.
 
   if (processKnobs()) // True if a knob changed range
   {
@@ -404,7 +410,7 @@ void loop()
     loopDisplay(ERRVAL_SUCCESS, fullScaleOfRange);
     sumVal = 0.0;
     sumCount = 0;
-
+    // Serial.println("Process Knobs");
     nextReportDue = millis() + 1000;
   }
   if (checkSerialCommand()) // Got one from serial
@@ -417,6 +423,7 @@ void loop()
     sumVal = 0.0;
     sumCount = 0;
     nextReportDue = millis() + 1000;
+    // Serial.println("Check serial command");
   }
 
   // See if new data:
@@ -428,6 +435,15 @@ void loop()
     sumCount++;
     if (millis() > (nextReportDue)) // has one second elapsed?
     {
+      // Serial.print("Conversion results: ");
+      // Serial.print(sumVal);
+      // Serial.print("/");
+      // Serial.print(sumCount);
+      // Serial.print(" ");
+      // Serial.print(nextReportDue);
+      // Serial.print(" ");
+      // Serial.println(millis());
+
       loopDisplay(ERRVAL_SUCCESS, (sumCount == 0) ? val : sumVal / sumCount);
       sumVal = 0.0;
       sumCount = 0;
@@ -436,7 +452,6 @@ void loop()
   }
   else
   {
-    // some sort of error
-    loopDisplay(conversionError, 0.0);
+    // some sort of error`
   }
 }

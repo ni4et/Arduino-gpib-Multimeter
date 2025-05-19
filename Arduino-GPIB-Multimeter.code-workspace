@@ -9,6 +9,11 @@
 		"arduino.disableTestingOpen": true,
 		//"arduino.logLevel": "verbose",
 		"arduino.openPDEFiletype": true,
-		"arduino.skipHeaderProvider": true
+		"arduino.skipHeaderProvider": true,
+		"vscode-serial-monitor.customBaudRates": [
+			9600
+		],
+		"vscode-serial-monitor.lineEnding": "\r\n",
+		"vscode-serial-monitor.parity": "none"
 	}
 }
