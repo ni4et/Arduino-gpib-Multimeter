@@ -1,4 +1,4 @@
-#error
+
 /************************************************************************/
 /*																		*/
 /*	DMMShield.h	--	Interface Declarations for DMMShield.cpp		*/
