@@ -5,7 +5,7 @@
 #include <spi.h>
 #include <utils.h>
 
-#include <Wire.h> // Enable this line if using Arduino Uno, Mega, etc.
+// Enable this line if using Arduino Uno, Mega, etc.
 // #include <Adafruit_GFX.h>
 #include "Common.h"
 
@@ -20,7 +20,6 @@ Adafruit_AlphaNum4 unitsDisp = Adafruit_AlphaNum4();
 
 DMMShield dmm;
 #define ERRVAL_NODATA (1)
-unsigned long exRun; // Used to schedule DMM
 
 double val; // Most recent valid conversion
 uint8_t conversionError;
@@ -117,7 +116,6 @@ void setup()
   digitalWrite(PIN_TONE, HIGH);
 
   tone(PIN_TONE, 800, 100);
-  exRun = millis();
 }
 
 //******************************
@@ -216,7 +214,7 @@ void loopDisplay(uint8_t err, double val)
     // Serial.print("Display Buffer: ");
     // Serial.println(displayBuffer);
 
-    writeNumber("------ ");
+    writeNumber("--");
     writeUnits("OPEN");
   }
 }
@@ -395,7 +393,7 @@ bool checkSerialCommand() // Return true if s range change happened/
     }
     return rv; // Indicating no range change
   }
-  return false; // TODO - Broken apparently
+  return rv;
 }
 //******************************
 void loop()
@@ -416,13 +414,14 @@ void loop()
   if (checkSerialCommand()) // Got one from serial
   {
     // Need the full scale value here
-    double fullScaleOfRange = DMM_GetScaleRange(DMM_GetCurrentScale());
+    uint16_t scale = DMM_GetCurrentScale();
+    double fullScaleOfRange = DMM_GetScaleRange(scale);
 
     // Same as above:
     loopDisplay(ERRVAL_SUCCESS, fullScaleOfRange);
     sumVal = 0.0;
     sumCount = 0;
-    nextReportDue = millis() + 1000;
+    nextReportDue = millis() + (scale == DmmContinuity) ? 10 : 1000; // Go fast for continuity
     // Serial.println("Check serial command");
   }
 
