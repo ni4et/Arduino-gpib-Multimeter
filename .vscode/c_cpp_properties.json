@@ -15,7 +15,11 @@
           ],
           "intelliSenseMode": "gcc-x64",
           "includePath": [
-            "C:/Users/david/AppData/Local/Arduino15/libraries/**"
+
+            "C:/WORK/Arduino/Arduino-gpib-Multimeter/**",
+            "C:/Users/david/AppData/Local/Arduino15/libraries/**",
+            "C:/Users/david/AppData/Local/Arduino15/packages/arduino/hardware/avr/1.8.6/libraries/**"
+            
 
           ],
           "forcedInclude": [

@@ -792,7 +792,7 @@ uint8_t DMM_FormatValue(double dVal, char *pString, uint8_t fUnit)
                 strcat(pString, szUnit);
             }
         }
-        Serial.println(pString);
+        // Serial.println(pString);
     }
     return bResult;
 }
