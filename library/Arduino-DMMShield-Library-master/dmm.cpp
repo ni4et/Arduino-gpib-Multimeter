@@ -730,13 +730,19 @@ uint8_t DMM_FormatValue(double dVal, char *pString, uint8_t fUnit)
     {
         if (dVal == INFINITY)
         {
-            if (curCfg.mode == DmmContinuity)
+            if (curCfg.mode == DmmContinuity || curCfg.mode == DmmDiode)
             {
                 strcpy(pString, "OPEN");
             }
             else
             {
                 strcpy(pString, "OVERLOAD");
+            }
+            if (fUnit)
+            {
+                strcat(pString, " ");
+                strcat(pString, szUnitPrefix);
+                strcat(pString, szUnit);
             }
         }
         else
@@ -750,6 +756,12 @@ uint8_t DMM_FormatValue(double dVal, char *pString, uint8_t fUnit)
                 else
                 {
                     strcpy(pString, "OVERLOAD");
+                }
+                if (fUnit)
+                {
+                    strcat(pString, " ");
+                    strcat(pString, szUnitPrefix);
+                    strcat(pString, szUnit);
                 }
             }
             else
@@ -772,8 +784,15 @@ uint8_t DMM_FormatValue(double dVal, char *pString, uint8_t fUnit)
         }
         if (curCfg.mode == DmmDiode && dVal > DMM_DIODEOPENTHRESHOLD)
         {
-            strcpy(pString, "OPEN");
+            strcpy(pString, "---");
+            if (fUnit)
+            {
+                strcat(pString, " ");
+                strcat(pString, szUnitPrefix);
+                strcat(pString, szUnit);
+            }
         }
+        Serial.println(pString);
     }
     return bResult;
 }
